@@ -1,0 +1,36 @@
+# Ensure all text files are normalized and use LF in the repository
+* text=auto
+
+# Define the default behavior for all files
+* text=auto
+
+# Force LF line endings for specific file types
+*.php text eol=lf
+*.html text eol=lf
+*.js text eol=lf
+*.css text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Binary files should be treated as binary and not modified
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+
+# Windows-specific configuration
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Shell scripts should use LF line endings
+*.sh text eol=lf
+
+# Ensure consistency for configuration files
+.gitattributes text eol=lf
+.gitignore text eol=lf
+Dockerfile text eol=lf
