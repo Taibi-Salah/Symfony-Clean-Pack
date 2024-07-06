@@ -1,4 +1,19 @@
-# ligne de commande pour symfony avec docker
+⚠️ Aprés lancement des container Docker executer les commandes suivantes :
+   # Run Composer
+    -->   docker exec -it phpimmo composer install
+
+       # Run Yarn
+    -->   docker exec -it nodeimmo yarn
+
+       # Run Yarn encore dev
+    -->   docker exec -it nodeimmo yarn encore dev
+
+       # Run Yarn encore dev --watch
+     -->  docker exec -it nodeimmo yarn encore dev --watch
+
+       # Run Yarn add aos
+     --> docker exec -it nodeimmo yarn add aos
+⚠️
 
 # premier lancement de docker compose
 docker-compose up --build
