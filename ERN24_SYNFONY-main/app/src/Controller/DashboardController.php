@@ -1,17 +1,19 @@
 <?php
 
+// src/Controller/DashboardController.php
+
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
-class DasboardController extends AbstractController
+class DashboardController extends AbstractController
 {
     #[Route('/dashboard', name: 'app_dashboard')]
     public function index(): Response
     {
-        // Ces données devraient venir de votre logique métier / base de données
+        // These data should come from your business logic / database
         $data = [
             'openTickets' => 25,
             'inProgressTickets' => 15,
@@ -25,4 +27,5 @@ class DasboardController extends AbstractController
         ];
 
         return $this->render('home/dashboard.html.twig', $data);
-    }}
+    }
+}
