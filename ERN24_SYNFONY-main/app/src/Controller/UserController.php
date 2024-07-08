@@ -57,6 +57,28 @@ class UserController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    /**
+     * Route qui va afficher les tickets de l'utilisateur
+     * @Route("/tickets", name="app_tickets")
+     * @return Response
+     */
+    #[Route('/mytickets', name: 'app_tickets')]
+    public function tickets(): Response
+    {
+        return $this->render('user/ticket.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
+    /**Route qui va afficher la gestion de ticket pour les techniciens */
+    #[Route('/technicien', name: 'app_ticket')]
+    public function ticket(): Response
+    {
+        return $this->render('user/technicien.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
 }
 
 

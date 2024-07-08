@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+  
+{% block body %}  
+{{ include('home/partials/header.html.twig') }}
+<title>Gestion des Tickets</title>
+   <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="text-center">Gestion des Tickets</h1>
+            </div>
+            <div class="card-body">
+                <h2 class="text-center">Créer un nouveau ticket</h2>
+                <form method="post" action="#">
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                    </div>
+                    <div class="col-12 d-flex justify-content-center mt-4">
+                  <button class="button-form" type="submit">Créer un ticket</button>
+                </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h2 class="text-center">Tickets en cours</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Statut</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {# {% for ticket in tickets %} #}
+                            <tr>
+                                <th scope="row"> ticket.id </th>
+          
+                                <td> ticket.description </td>
+                                <td> ticket.status </td>
+                                <td>
+                                    <a href="#" class="btn btn-info btn-sm">Voir</a>
+                                    <a href="#" class="btn btn-warning btn-sm">Modifier</a>
+                                    <a href="#" class="btn btn-danger btn-sm">Supprimer</a>
+                                </td>
+                            </tr>
+                        {# {% else %} #}
+                            <tr>
+                                <td colspan="5" class="text-center">Aucun ticket en cours</td>
+                            </tr>
+                        {# {% endfor %} #}
+                    </tbody>
+                </table>
+            </div>
+            </div>
+             <div class="card mt-4">
+            <div class="card-header">
+                <h2>Historique des Tickets Clôturés</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Date de Clôture</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {# {% for ticket in closed_tickets %} #}
+                            <tr>
+                                <th scope="row"> ticket.id </th>
+                         
+                                <td> ticket.description </td>
+                                <td> ticket.closed_date|date('d/m/Y')</td>
+                            </tr>
+                        {# {% else %} #}
+                            <tr>
+                                <td colspan="4" class="text-center">Aucun ticket clôturé</td>
+                            </tr>
+                        {# {% endfor %} #}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </div>
+    </div>
+{{ include('home/partials/footer.html.twig') }}
+{% endblock %}
+
