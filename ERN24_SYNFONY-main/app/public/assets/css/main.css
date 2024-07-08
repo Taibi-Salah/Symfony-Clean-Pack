@@ -2792,3 +2792,8 @@ section,
 .button-form:hover {
   background: color-mix(in srgb, var(--accent-color), transparent 20%);
 }
+
+.container{
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
