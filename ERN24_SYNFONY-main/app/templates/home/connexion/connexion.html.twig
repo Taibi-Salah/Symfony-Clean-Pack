@@ -1,0 +1,45 @@
+
+{% extends 'base.html.twig' %}
+   
+		{% block body %}
+    <title>Connectez-vous</title>
+<body> 
+
+		{{ include('home/partials/header.html.twig') }}
+      
+      <section id="hero" class="section form">
+      <h2 class="formtitle">Se connecter</h2>
+        <div class="d-flex justify-content-center">
+        
+            <form action="#" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+              <div class="row gy-4">
+
+        
+
+                <div class="col-12">
+                  <input type="text" class="form-control" name="email" placeholder="Votre email" required>
+                </div>
+
+                <div class="col-12">
+                <input type="password" class="form-control" name="password" placeholder="Votre mot de passe" required>
+                </div>
+                <div class="col-12 d-flex justify-content-center">
+                  <button class="button-form" type="submit">Se connecter</button>
+                </div>
+
+            </form>
+            <p class="text-center">Vous n'avez pas de compte ? <a href="/inscription">Inscrivez-vous</a></p>
+          </div><!-- End Contact Form -->
+
+      </section>
+
+
+
+
+      {{ include('home/partials/footer.html.twig') }}
+
+
+</body>
+		{% endblock %}
+    
+
