@@ -1,58 +1,53 @@
-
+{# templates/home/connexion/inscription.html.twig #}
 {% extends 'base.html.twig' %}
 
-   
-		{% block body %}
-    <title>Créer votre compte</title>
+{% block body %}
+<title>Créer votre compte</title>
 <body> 
 
-		{{ include('home/partials/header.html.twig') }}
+    {{ include('home/partials/header.html.twig') }}
       
-      <section id="hero" class="section form">
-      <h2 class="formtitle">Créer un compte</h2>
+    <section id="hero" class="section form">
+        <h2 class="formtitle">Créer un compte</h2>
         <div class="d-flex justify-content-center">
-        
-            <form action="#" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
-              <div class="row gy-4">
+            {{ form_start(form, {'attr': {'class': 'php-email-form', 'data-aos': 'fade-up', 'data-aos-delay': '200'}}) }}
+                <div class="row gy-4">
 
-                <div class="col-4">
-                  <input type="text" class="form-control" name="name" placeholder="Votre nom" required>
+                    <div class="col-4">
+                        {{ form_row(form.name, {'attr': {'class': 'form-control', 'placeholder': 'Votre nom'}}) }}
+                    </div>
+
+                    <div class="col-4">
+                        {{ form_row(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Votre email'}}) }}
+                    </div>
+
+                    <div class="col-4">
+                        {{ form_row(form.password, {'attr': {'class': 'form-control', 'placeholder': 'Votre mot de passe'}}) }}
+                    </div>
+
+                    <div class="col-6">
+                        {{ form_row(form.address, {'attr': {'class': 'form-control', 'placeholder': 'Votre adresse'}}) }}
+                    </div>
+
+                    <div class="col-6">
+                        {{ form_row(form.phoneNumber, {'attr': {'class': 'form-control', 'placeholder': 'Votre numéro de téléphone'}}) }}
+                    </div>
+
+                    <div class="col-12 d-flex justify-content-center">
+                        <button class="button-form" type="submit">Créer un compte</button>
+                    </div>
+
                 </div>
+            {{ form_end(form) }}
+            <p class="text-center">Vous avez déjà un compte ? <a href="{{ path('app_connexion') }}">Connectez-vous</a></p>
+        </div>
+    </section>
 
-                <div class="col-4">
-                  <input type="text" class="form-control" name="email" placeholder="Votre email" required>
-                </div>
-
-                <div class="col-4">
-                <input type="password" class="form-control" name="password" placeholder="Votre mot de passe" required>
-                </div>
-
-                <div class="col-6">
-                <input type="text" class="form-control" name="address" placeholder="Votre adresse" required>
-                </div>
-
-                <div class="col-6">
-                <input type="number" class="form-control" name="phone" placeholder="Votre numéro de téléphone" required>
-                </div>
-
-                <div class="col-12 d-flex justify-content-center">
-                  <button class="button-form" type="submit">Créer un compte</button>
-                </div>
-                
-      
-            </form>
-            <p class="text-center">Vous avez déjà un compte ? <a href="/connexion">Connectez-vous</a></p>
-          </div><!-- End Contact Form -->
-
-      </section>
-
-
-
-
-      {{ include('home/partials/footer.html.twig') }}
-
+    {{ include('home/partials/footer.html.twig') }}
 
 </body>
-		{% endblock %}
+{% endblock %}
+
+
     
 

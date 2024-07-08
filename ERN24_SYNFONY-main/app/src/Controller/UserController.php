@@ -2,9 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
+use App\Form\ClientType; // Ensure this use statement is present
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserController extends AbstractController
 {
@@ -27,11 +32,33 @@ class UserController extends AbstractController
      * @return Response
      */
     #[Route('/inscription', name: 'app_inscription')]
-    public function register(): Response
+    public function register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
+        $client = new Client();
+        $form = $this->createForm(ClientType::class, $client);
+        
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $client->setPassword(
+                $passwordHasher->hashPassword(
+                    $client,
+                    $form->get('password')->getData()
+                )
+            );
+
+            $entityManager->persist($client);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_connexion');
+        }
+
         return $this->render('home/connexion/inscription.html.twig', [
-            'controller_name' => 'HomeController',
+            'form' => $form->createView(),
         ]);
     }
 }
+
+
+
 
