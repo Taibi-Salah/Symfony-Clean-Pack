@@ -1,80 +1,59 @@
 <?php
 
+// src/Entity/Technicien.php
+
 namespace App\Entity;
 
-use App\Repository\TechnicienRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: TechnicienRepository::class)]
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\TechnicienRepository")
+ * @ORM\Table(name="techniciens")
+ */
 class Technicien
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private string $name;
 
-    #[ORM\Column(length: 255)]
-    private ?string $email = null;
-
-    #[ORM\Column(length: 20)]
-    private ?string $phoneNumber = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $specialization = null;
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private string $email;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
-
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): self
     {
         $this->email = $email;
-
-        return $this;
-    }
-
-    public function getPhoneNumber(): ?string
-    {
-        return $this->phoneNumber;
-    }
-
-    public function setPhoneNumber(string $phoneNumber): static
-    {
-        $this->phoneNumber = $phoneNumber;
-
-        return $this;
-    }
-
-    public function getSpecialization(): ?string
-    {
-        return $this->specialization;
-    }
-
-    public function setSpecialization(string $specialization): static
-    {
-        $this->specialization = $specialization;
-
         return $this;
     }
 }
+

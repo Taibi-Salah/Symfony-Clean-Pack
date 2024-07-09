@@ -2764,3 +2764,36 @@ section,
   color: color-mix(in srgb, var(--default-color), transparent 60%);
   font-size: 14px;
 }
+
+/* Partie form  */
+.form{
+  margin-top: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.formtitle{
+  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 50px;
+}
+
+.button-form{
+  background-color: var(--accent-color);
+  color: var(--contrast-color);
+  border: 0;
+  padding:10px;
+  transition: 0.4s;
+  border-radius: 4px;
+}
+.button-form:hover {
+  background: color-mix(in srgb, var(--accent-color), transparent 20%);
+}
+
+.container{
+  margin-top: 50px;
+  margin-bottom: 50px;
+}

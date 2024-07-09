@@ -1,12 +1,16 @@
 <?php
 
+// src/Entity/Admin.php
+
 namespace App\Entity;
 
 use App\Repository\AdminRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: AdminRepository::class)]
-class Admin
+class Admin implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -22,6 +26,9 @@ class Admin
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
+    #[ORM\Column(type: "json")]
+    private array $roles = [];
+
     public function getId(): ?int
     {
         return $this->id;
@@ -35,7 +42,6 @@ class Admin
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -47,7 +53,6 @@ class Admin
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -59,7 +64,35 @@ class Admin
     public function setPassword(string $password): static
     {
         $this->password = $password;
-
         return $this;
     }
+
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        $roles[] = 'ROLE_ADMIN';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+        return $this;
+    }
+
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    public function eraseCredentials(): void
+    {
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
 }
+
