@@ -5,10 +5,7 @@
     <title>Connectez-vous</title>
     <body> 
         {{ include('home/partials/header.html.twig') }}
-      
-<<<<<<< HEAD
         <section id="hero" class="section form">
-            <h2 class="formtitle">Se connecter</h2>
             <div class="d-flex justify-content-center">
                 {{ form_start(form, {'attr': {'class': 'php-email-form', 'data-aos': 'fade-up', 'data-aos-delay': '200'}}) }}
                 <div class="row gy-4">
@@ -19,20 +16,7 @@
                     <div class="col-12">
                         {{ form_row(form.password, {'attr': {'class': 'form-control', 'placeholder': 'Votre mot de passe'}}) }}
                     </div>
-                    <div class="col-12 d-flex justify-content-center">
-                        <button class="button-form" type="submit">Se connecter</button>
-                    </div>
-=======
-      <section id="hero" class="section form">
-      <h2 class="formtitle">Se connecter</h2>
-        <div class="d-flex justify-content-center">
-        
-            <form action="" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
-              <div class="row gy-4">
-                <div class="col-12">
-                  <input type="text" class="form-control" name="email" placeholder="Votre email" required>
->>>>>>> d2846ecd4f4aafb6468d7ecf7b2c4f7676faa635
-                </div>
+
                 {{ form_end(form) }}
                 {% if error %}
                     <div class="error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>

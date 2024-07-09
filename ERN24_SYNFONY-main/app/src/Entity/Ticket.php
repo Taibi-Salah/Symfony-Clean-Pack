@@ -1,81 +1,92 @@
 <?php
 
+// src/Entity/Ticket.php
+
 namespace App\Entity;
 
-use App\Repository\TicketRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: TicketRepository::class)]
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\TicketRepository")
+ * @ORM\Table(name="tickets")
+ */
 class Ticket
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $description = null;
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private string $title;
 
-    #[ORM\Column(length: 255)]
-    private ?string $status = null;
+    /**
+     * @ORM\Column(type="text")
+     */
+    private string $description;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $createdAt = null;
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private \DateTimeInterface $createdAt;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $updatedAt = null;
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="tickets")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private Client $client;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDescription(): ?string
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(string $description): self
     {
         $this->description = $description;
-
         return $this;
     }
 
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): static
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): \DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getClient(): Client
     {
-        return $this->updatedAt;
+        return $this->client;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): static
+    public function setClient(Client $client): self
     {
-        $this->updatedAt = $updatedAt;
-
+        $this->client = $client;
         return $this;
     }
 }
+

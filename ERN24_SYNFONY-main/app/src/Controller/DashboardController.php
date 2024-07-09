@@ -8,26 +8,17 @@ use Symfony\Component\Mercure\Update;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-<<<<<<< HEAD:ERN24_SYNFONY-main/app/src/Controller/DashboardController.php
 use Symfony\Component\Routing\Annotation\Route;
-=======
-use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
->>>>>>> 7c581041f6408f59ee4fbf697befb5bf49da730c:ERN24_SYNFONY-main/app/src/Controller/DasboardController.php
 
 class DashboardController extends AbstractController
 {
     #[Route('/dashboard', name: 'app_dashboard')]
     public function index(): Response
     {
-<<<<<<< HEAD:ERN24_SYNFONY-main/app/src/Controller/DashboardController.php
-        // These data should come from your business logic / database
-        $data = [
-=======
         // Données pour le tableau de bord
         $dashboardData = [
->>>>>>> 7c581041f6408f59ee4fbf697befb5bf49da730c:ERN24_SYNFONY-main/app/src/Controller/DasboardController.php
             'openTickets' => 25,
             'inProgressTickets' => 15,
             'resolvedToday' => 10,
@@ -59,10 +50,6 @@ class DashboardController extends AbstractController
         ]);
 
         return $this->render('home/dashboard.html.twig', $data);
-<<<<<<< HEAD:ERN24_SYNFONY-main/app/src/Controller/DashboardController.php
-    }
-}
-=======
 
     }
 
@@ -107,5 +94,3 @@ class DashboardController extends AbstractController
             return $this->json(['success' => true]);
         }
     }
-    
->>>>>>> 7c581041f6408f59ee4fbf697befb5bf49da730c:ERN24_SYNFONY-main/app/src/Controller/DasboardController.php

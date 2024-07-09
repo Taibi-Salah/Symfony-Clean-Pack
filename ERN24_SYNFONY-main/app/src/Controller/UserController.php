@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Client;
-use App\Form\LoginType;
+use App\Form\ClientType;  // Ensure this import is correct
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -130,6 +130,7 @@ class UserController extends AbstractController
         ]);
     }
 }
+
 
 
 
