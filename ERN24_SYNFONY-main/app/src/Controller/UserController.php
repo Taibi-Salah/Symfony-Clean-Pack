@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Client;
-use App\Form\ClientType;  // Ensure this import is correct
+use App\Form\LoginType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Form\ClientType;  // Ensure this import is correct
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -76,12 +77,12 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/dashboard', name: 'app_dashboard')]
-    public function dashboard(): Response
-    {
-        // You can add logic here to fetch data or perform actions needed for the dashboard
-        return $this->render('dashboard.html.twig');
-    }
+    // #[Route('/dashboard', name: 'app_dashboard')]
+    // public function dashboard(): Response
+    // {
+    //     // You can add logic here to fetch data or perform actions needed for the dashboard
+    //     return $this->render('dashboard.html.twig');
+    // }
 
     #[Route('/inscription', name: 'app_inscription')]
     public function register(Request $request, UserPasswordHasherInterface $passwordHasher): Response
