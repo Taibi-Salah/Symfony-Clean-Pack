@@ -14,67 +14,37 @@ class Ticket
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $description = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $status = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $dateStart = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $createdAt = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $updatedAt = null;
+    private ?\DateTimeInterface $dateEnd = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDescription(): ?string
+    public function getDateStart(): ?\DateTimeInterface
     {
-        return $this->description;
+        return $this->dateStart;
     }
 
-    public function setDescription(string $description): static
+    public function setDateStart(\DateTimeInterface $dateStart): static
     {
-        $this->description = $description;
+        $this->dateStart = $dateStart;
 
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function getDateEnd(): ?\DateTimeInterface
     {
-        return $this->status;
+        return $this->dateEnd;
     }
 
-    public function setStatus(string $status): static
+    public function setDateEnd(\DateTimeInterface $dateEnd): static
     {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
+        $this->dateEnd = $dateEnd;
 
         return $this;
     }

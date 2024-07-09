@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\InterventionRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: InterventionRepository::class)]
@@ -14,37 +13,22 @@ class Intervention
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $actionTaken = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $date = null;
+    #[ORM\Column(length: 255)]
+    private ?string $label = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getActionTaken(): ?string
+    public function getLabel(): ?string
     {
-        return $this->actionTaken;
+        return $this->label;
     }
 
-    public function setActionTaken(string $actionTaken): static
+    public function setLabel(string $label): static
     {
-        $this->actionTaken = $actionTaken;
-
-        return $this;
-    }
-
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(\DateTimeInterface $date): static
-    {
-        $this->date = $date;
+        $this->label = $label;
 
         return $this;
     }

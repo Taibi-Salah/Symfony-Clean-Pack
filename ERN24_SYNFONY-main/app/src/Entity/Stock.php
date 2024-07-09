@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\StockRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: StockRepository::class)]
@@ -15,54 +14,42 @@ class Stock
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $itemName = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $description = null;
+    private ?string $label = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $referenceNumber = null;
+    private ?string $referenceNb = null;
 
     #[ORM\Column]
     private ?int $quantity = null;
+
+    #[ORM\Column]
+    private ?bool $isActive = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getItemName(): ?string
+    public function getLabel(): ?string
     {
-        return $this->itemName;
+        return $this->label;
     }
 
-    public function setItemName(string $itemName): static
+    public function setLabel(string $label): static
     {
-        $this->itemName = $itemName;
+        $this->label = $label;
 
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getReferenceNb(): ?string
     {
-        return $this->description;
+        return $this->referenceNb;
     }
 
-    public function setDescription(string $description): static
+    public function setReferenceNb(string $referenceNb): static
     {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    public function getReferenceNumber(): ?string
-    {
-        return $this->referenceNumber;
-    }
-
-    public function setReferenceNumber(string $referenceNumber): static
-    {
-        $this->referenceNumber = $referenceNumber;
+        $this->referenceNb = $referenceNb;
 
         return $this;
     }
@@ -75,6 +62,18 @@ class Stock
     public function setQuantity(int $quantity): static
     {
         $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setActive(bool $isActive): static
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }
