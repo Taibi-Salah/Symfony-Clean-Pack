@@ -1,77 +1,52 @@
 <?php
 
-// src/Entity/InterventionStock.php
-
 namespace App\Entity;
 
+use App\Repository\InterventionStockRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\InterventionStockRepository")
- * @ORM\Table(name="intervention_stocks")
- */
+#[ORM\Entity(repositoryClass: InterventionStockRepository::class)]
 class InterventionStock
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
     private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private int $quantity;
+    #[ORM\ManyToOne(inversedBy: 'interventionStocks')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Intervention $intervention = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Intervention")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private Intervention $intervention;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Stock")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private Stock $stock;
+    #[ORM\ManyToOne(inversedBy: 'interventionStocks')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Stock $stock = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getQuantity(): int
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity(int $quantity): self
-    {
-        $this->quantity = $quantity;
-        return $this;
-    }
-
-    public function getIntervention(): Intervention
+    public function getIntervention(): ?Intervention
     {
         return $this->intervention;
     }
 
-    public function setIntervention(Intervention $intervention): self
+    public function setIntervention(?Intervention $intervention): static
     {
         $this->intervention = $intervention;
+
         return $this;
     }
 
-    public function getStock(): Stock
+    public function getStock(): ?Stock
     {
         return $this->stock;
     }
 
-    public function setStock(Stock $stock): self
+    public function setStock(?Stock $stock): static
     {
         $this->stock = $stock;
+
         return $this;
     }
 }
-

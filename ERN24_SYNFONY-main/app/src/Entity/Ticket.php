@@ -1,92 +1,96 @@
 <?php
 
-// src/Entity/Ticket.php
-
 namespace App\Entity;
 
+use App\Repository\TicketRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\TicketRepository")
- * @ORM\Table(name="tickets")
- */
+#[ORM\Entity(repositoryClass: TicketRepository::class)]
 class Ticket
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
     private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private string $title;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $dateStart = null;
 
-    /**
-     * @ORM\Column(type="text")
-     */
-    private string $description;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $dateEnd = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private \DateTimeInterface $createdAt;
+    #[ORM\ManyToOne(inversedBy: 'tickets')]
+    private ?User $user = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="tickets")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private Client $client;
+    #[ORM\ManyToOne(inversedBy: 'tickets')]
+    private ?User $technicien = null;
+
+    #[ORM\OneToOne(inversedBy: 'ticket', cascade: ['persist', 'remove'])]
+    private ?Intervention $intervention = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTitle(): string
+    public function getDateStart(): ?\DateTimeInterface
     {
-        return $this->title;
+        return $this->dateStart;
     }
 
-    public function setTitle(string $title): self
+    public function setDateStart(\DateTimeInterface $dateStart): static
     {
-        $this->title = $title;
+        $this->dateStart = $dateStart;
+
         return $this;
     }
 
-    public function getDescription(): string
+    public function getDateEnd(): ?\DateTimeInterface
     {
-        return $this->description;
+        return $this->dateEnd;
     }
 
-    public function setDescription(string $description): self
+    public function setDateEnd(\DateTimeInterface $dateEnd): static
     {
-        $this->description = $description;
+        $this->dateEnd = $dateEnd;
+
         return $this;
     }
 
-    public function getCreatedAt(): \DateTimeInterface
+    public function getUser(): ?User
     {
-        return $this->createdAt;
+        return $this->user;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setUser(?User $user): static
     {
-        $this->createdAt = $createdAt;
+        $this->user = $user;
+
         return $this;
     }
 
-    public function getClient(): Client
+    public function getTechnicien(): ?User
     {
-        return $this->client;
+        return $this->technicien;
     }
 
-    public function setClient(Client $client): self
+    public function setTechnicien(?User $technicien): static
     {
-        $this->client = $client;
+        $this->technicien = $technicien;
+
+        return $this;
+    }
+
+    public function getIntervention(): ?Intervention
+    {
+        return $this->intervention;
+    }
+
+    public function setIntervention(?Intervention $intervention): static
+    {
+        $this->intervention = $intervention;
+
         return $this;
     }
 }
-

@@ -1,93 +1,103 @@
 <?php
 
-// src/Entity/Intervention.php
-
 namespace App\Entity;
 
+use App\Repository\InterventionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\InterventionRepository")
- * @ORM\Table(name="interventions")
- */
+#[ORM\Entity(repositoryClass: InterventionRepository::class)]
 class Intervention
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
     private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private \DateTimeInterface $date;
+    #[ORM\Column(length: 255)]
+    private ?string $label = null;
+
+    #[ORM\OneToOne(mappedBy: 'intervention', cascade: ['persist', 'remove'])]
+    private ?Ticket $ticket = null;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var Collection<int, InterventionStock>
      */
-    private string $description;
+    #[ORM\OneToMany(mappedBy: 'intervention', targetEntity: InterventionStock::class)]
+    private Collection $interventionStocks;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Ticket")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private Ticket $ticket;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Technicien")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private Technicien $technicien;
+    public function __construct()
+    {
+        $this->interventionStocks = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDate(): \DateTimeInterface
+    public function getLabel(): ?string
     {
-        return $this->date;
+        return $this->label;
     }
 
-    public function setDate(\DateTimeInterface $date): self
+    public function setLabel(string $label): static
     {
-        $this->date = $date;
+        $this->label = $label;
+
         return $this;
     }
 
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): self
-    {
-        $this->description = $description;
-        return $this;
-    }
-
-    public function getTicket(): Ticket
+    public function getTicket(): ?Ticket
     {
         return $this->ticket;
     }
 
-    public function setTicket(Ticket $ticket): self
+    public function setTicket(?Ticket $ticket): static
     {
+        // unset the owning side of the relation if necessary
+        if ($ticket === null && $this->ticket !== null) {
+            $this->ticket->setIntervention(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($ticket !== null && $ticket->getIntervention() !== $this) {
+            $ticket->setIntervention($this);
+        }
+
         $this->ticket = $ticket;
+
         return $this;
     }
 
-    public function getTechnicien(): Technicien
+    /**
+     * @return Collection<int, InterventionStock>
+     */
+    public function getInterventionStocks(): Collection
     {
-        return $this->technicien;
+        return $this->interventionStocks;
     }
 
-    public function setTechnicien(Technicien $technicien): self
+    public function addInterventionStock(InterventionStock $interventionStock): static
     {
-        $this->technicien = $technicien;
+        if (!$this->interventionStocks->contains($interventionStock)) {
+            $this->interventionStocks->add($interventionStock);
+            $interventionStock->setIntervention($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInterventionStock(InterventionStock $interventionStock): static
+    {
+        if ($this->interventionStocks->removeElement($interventionStock)) {
+            // set the owning side to null (unless already changed)
+            if ($interventionStock->getIntervention() === $this) {
+                $interventionStock->setIntervention(null);
+            }
+        }
+
         return $this;
     }
 }
-
