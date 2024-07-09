@@ -3,7 +3,7 @@
 
 
 		{% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
+			{{ encore_entry_link_tags('app') }}
 
 			{{ encore_entry_link_tags('app') }}
 
@@ -14,7 +14,8 @@
 
 			{# <!-- Vendor CSS Files --> #}
 			<link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-			<link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+			<link
+			href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
 			{# <link href="assets/vendor/aos/aos.css" rel="stylesheet"> #}
 			<link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
 			<link
@@ -27,10 +28,13 @@
 
 	</head>
 	<body>
-		{% block body %}{% endblock %}
+		{% block body %}
+
+
+		{% endblock %}
 
 		{% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
+			{{ encore_entry_script_tags('app') }}
 			{{ encore_entry_script_tags('app') }}
 			{# <!-- Vendor JS Files --> #}
 			<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
