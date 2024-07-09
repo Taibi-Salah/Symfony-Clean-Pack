@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rapports des Techniciens{% endblock %}
+
+{% block body %}
+<div class="bg-gray-100 min-h-screen">
+    <nav class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto">
+            <h1 class="text-2xl font-bold">TechRescue</h1>
+        </div>
+    </nav>
+
+    <main class="container mx-auto mt-8 px-4">
+        <h2 class="text-3xl font-semibold mb-6">Rapports des Techniciens</h2>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="mb-4">
+                <input type="text" placeholder="Rechercher un rapport..." class="w-full p-2 border rounded">
+            </div>
+
+            <table class="w-full">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="p-2 text-left">ID</th>
+                        <th class="p-2 text-left">Technicien</th>
+                        <th class="p-2 text-left">Client</th>
+                        <th class="p-2 text-left">Date</th>
+                        <th class="p-2 text-left">Statut</th>
+                        <th class="p-2 text-left">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in 1..10 %}
+                    <tr class="border-b">
+                        <td class="p-2">#{{ 1000 + i }}</td>
+                        <td class="p-2">John Doe</td>
+                        <td class="p-2">Entreprise ABC</td>
+                        <td class="p-2">{{ "now"|date("d/m/Y") }}</td>
+                        <td class="p-2">
+                            <span class="px-2 py-1 bg-green-200 text-green-800 rounded-full text-sm">Terminé</span>
+                        </td>
+                        <td class="p-2">
+                            <a href="#" class="text-blue-600 hover:underline">Voir</a>
+                            <a href="#" class="text-green-600 hover:underline ml-2">Éditer</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="mt-4 flex justify-between items-center">
+                <div>
+                    <span class="text-gray-600">Affichage de 1 à 10 sur 50 rapports</span>
+                </div>
+                <div class="flex space-x-2">
+                    <a href="#" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">Précédent</a>
+                    <a href="#" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">Suivant</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

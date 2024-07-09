@@ -52,44 +52,6 @@ class DasboardController extends AbstractController
     }
 
 
-        private $hub;
-    
-        public function __construct(HubInterface $hub)
-        {
-            $this->hub = $hub;
-        }
-    
-        private function publishUpdate($type, $message)
-        {
-            $update = new Update(
-                'https://example.com/notifications', // Utilisez une URL plus spécifique ici
-                json_encode(['type' => $type, 'message' => $message])
-            );
-            $this->hub->publish($update);
-        }
-    
-        #[Route('/update-ticket', name: 'update_ticket', methods: ['POST'])]
-        public function updateTicket(Request $request): JsonResponse
-        {
-            // Récupérer l'ID du ticket depuis la requête
-            $ticketId = $request->request->get('ticketId');  
-            // Logique de mise à jour du ticket
-            // ...
-            $this->publishUpdate('ticket_update', 'Le ticket #' . $ticketId . ' a été mis à jour.');
-    
-            return $this->json(['success' => true]);
-        }
-    
-        #[Route('/stock-alert', name: 'stock_alert', methods: ['POST'])]
-        public function stockAlert(Request $request): JsonResponse
-        {
-            // Récupérer le nom du produit depuis la requête
-            $productName = $request->request->get('productName');
-            // Logique de vérification du stock
-            // ...
-            $this->publishUpdate('stock_alert', 'Le stock de ' . $productName . ' est bas.');
-    
-            return $this->json(['success' => true]);
-        }
+     
     }
     
