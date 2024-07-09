@@ -20,6 +20,15 @@ class Ticket
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateEnd = null;
 
+    #[ORM\ManyToOne(inversedBy: 'tickets')]
+    private ?User $user = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tickets')]
+    private ?User $technicien = null;
+
+    #[ORM\OneToOne(inversedBy: 'ticket', cascade: ['persist', 'remove'])]
+    private ?Intervention $intervention = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +54,42 @@ class Ticket
     public function setDateEnd(\DateTimeInterface $dateEnd): static
     {
         $this->dateEnd = $dateEnd;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getTechnicien(): ?User
+    {
+        return $this->technicien;
+    }
+
+    public function setTechnicien(?User $technicien): static
+    {
+        $this->technicien = $technicien;
+
+        return $this;
+    }
+
+    public function getIntervention(): ?Intervention
+    {
+        return $this->intervention;
+    }
+
+    public function setIntervention(?Intervention $intervention): static
+    {
+        $this->intervention = $intervention;
 
         return $this;
     }

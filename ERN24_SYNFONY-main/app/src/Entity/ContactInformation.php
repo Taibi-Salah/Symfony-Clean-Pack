@@ -40,6 +40,9 @@ class ContactInformation
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $siretNb = null;
 
+    #[ORM\OneToOne(mappedBy: 'contactInformation', cascade: ['persist', 'remove'])]
+    private ?User $user = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -149,6 +152,28 @@ class ContactInformation
     public function setSiretNb(?string $siretNb): static
     {
         $this->siretNb = $siretNb;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($user === null && $this->user !== null) {
+            $this->user->setContactInformation(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($user !== null && $user->getContactInformation() !== $this) {
+            $user->setContactInformation($this);
+        }
+
+        $this->user = $user;
 
         return $this;
     }
