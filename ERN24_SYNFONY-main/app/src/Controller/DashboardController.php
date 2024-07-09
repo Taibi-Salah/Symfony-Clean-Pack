@@ -1,16 +1,18 @@
 <?php
 
+// src/Controller/DashboardController.php
+
 namespace App\Controller;
 
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class DasboardController extends AbstractController
+class DashboardController extends AbstractController
 {
     #[Route('/dashboard', name: 'app_dashboard')]
     public function index(): Response
@@ -54,4 +56,3 @@ class DasboardController extends AbstractController
 
      
     }
-    

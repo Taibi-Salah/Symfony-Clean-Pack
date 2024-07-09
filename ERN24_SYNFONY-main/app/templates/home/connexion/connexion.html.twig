@@ -1,0 +1,39 @@
+{# templates/home/connexion/connexion.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <title>Connectez-vous</title>
+    <body> 
+        {{ include('home/partials/header.html.twig') }}
+        <section id="hero" class="section form">
+            <div class="d-flex justify-content-center">
+                {{ form_start(form, {'attr': {'class': 'php-email-form', 'data-aos': 'fade-up', 'data-aos-delay': '200'}}) }}
+                <div class="row gy-4">
+                    <div class="col-12">
+                        {{ form_row(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Votre email'}}) }}
+                    </div>
+
+                    <div class="col-12">
+                        {{ form_row(form.password, {'attr': {'class': 'form-control', 'placeholder': 'Votre mot de passe'}}) }}
+                    </div>
+
+                {{ form_end(form) }}
+                {% if error %}
+                    <div class="error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+                <p class="text-center">Vous n'avez pas de compte ? <a href="{{ path('app_inscription') }}">Inscrivez-vous</a></p>
+            </div><!-- End Contact Form -->
+        </section>
+      
+        {{ include('home/partials/footer.html.twig') }}
+    </body>
+{% endblock %}
+
+
+
+
+
+
+
+    
+

@@ -1,12 +1,11 @@
 version: "3.8"
-# un nouveau commentaire
 volumes:
-  mariaimmo: #déclaration du volume pour la base
+  mariaimmo: # déclaration du volume pour la base
 
 services:
 
   # container de bdd
-  immobase: #nom de service
+  immobase: # nom de service
     container_name: baseimmo
     image: mariadb:latest
     ports:
@@ -26,8 +25,8 @@ services:
   immophp:
     container_name: phpimmo
     build:
-      context: ./php
-#    user: "501:20"
+      context: .
+      dockerfile: ./php/Dockerfile
     sysctls:
       - net.ipv4.ip_unprivileged_port_start=0
     ports:
@@ -48,20 +47,18 @@ services:
     tty: true
     container_name: nodeimmo
     build:
-      context: ./node
+      context: .
+      dockerfile: ./node/Dockerfile
     volumes:
       - ./app:/var/www/html
-    restart: always
-    environment:
-      TZ: UTC
     depends_on:
       - immophp
+    command: /bin/sh -c "yarn install && yarn encore dev && yarn encore dev --watch"
 
   # server web
   immonginx:
     container_name: nginximmo
     image: nginx:stable-alpine
-#    user: "501:20"
     sysctls:
       - net.ipv4.ip_unprivileged_port_start=0
     ports:
