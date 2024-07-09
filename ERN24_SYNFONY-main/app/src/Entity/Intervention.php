@@ -24,7 +24,7 @@ class Intervention
     /**
      * @var Collection<int, InterventionStock>
      */
-    #[ORM\OneToMany(targetEntity: InterventionStock::class, mappedBy: 'intervention')]
+    #[ORM\OneToMany(mappedBy: 'intervention', targetEntity: InterventionStock::class)]
     private Collection $interventionStocks;
 
     public function __construct()

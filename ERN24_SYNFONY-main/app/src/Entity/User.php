@@ -33,13 +33,13 @@ class User
     /**
      * @var Collection<int, Ticket>
      */
-    #[ORM\OneToMany(targetEntity: Ticket::class, mappedBy: 'user')]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Ticket::class)]
     private Collection $tickets;
 
     /**
      * @var Collection<int, Stock>
      */
-    #[ORM\OneToMany(targetEntity: Stock::class, mappedBy: 'supplier')]
+    #[ORM\OneToMany(mappedBy: 'supplier', targetEntity: Stock::class)]
     private Collection $stocks;
 
     public function __construct()

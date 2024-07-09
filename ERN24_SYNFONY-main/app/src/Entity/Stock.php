@@ -33,7 +33,7 @@ class Stock
     /**
      * @var Collection<int, InterventionStock>
      */
-    #[ORM\ManyToMany(targetEntity: InterventionStock::class, mappedBy: 'stock')]
+    #[ORM\OneToMany(mappedBy: 'stock', targetEntity: InterventionStock::class)]
     private Collection $interventionStocks;
 
     public function __construct()
@@ -118,7 +118,7 @@ class Stock
     {
         if (!$this->interventionStocks->contains($interventionStock)) {
             $this->interventionStocks->add($interventionStock);
-            $interventionStock->addStock($this);
+            $interventionStock->setStock($this);
         }
 
         return $this;
@@ -127,7 +127,10 @@ class Stock
     public function removeInterventionStock(InterventionStock $interventionStock): static
     {
         if ($this->interventionStocks->removeElement($interventionStock)) {
-            $interventionStock->removeStock($this);
+            // set the owning side to null (unless already changed)
+            if ($interventionStock->getStock() === $this) {
+                $interventionStock->setStock(null);
+            }
         }
 
         return $this;

@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\InterventionStockRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: InterventionStockRepository::class)]
@@ -15,47 +13,17 @@ class InterventionStock
     #[ORM\Column]
     private ?int $id = null;
 
-    /**
-     * @var Collection<int, Stock>
-     */
-    #[ORM\ManyToMany(targetEntity: Stock::class, inversedBy: 'interventionStocks')]
-    private Collection $stock;
-
     #[ORM\ManyToOne(inversedBy: 'interventionStocks')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Intervention $intervention = null;
 
-    public function __construct()
-    {
-        $this->stock = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(inversedBy: 'interventionStocks')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Stock $stock = null;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @return Collection<int, Stock>
-     */
-    public function getStock(): Collection
-    {
-        return $this->stock;
-    }
-
-    public function addStock(Stock $stock): static
-    {
-        if (!$this->stock->contains($stock)) {
-            $this->stock->add($stock);
-        }
-
-        return $this;
-    }
-
-    public function removeStock(Stock $stock): static
-    {
-        $this->stock->removeElement($stock);
-
-        return $this;
     }
 
     public function getIntervention(): ?Intervention
@@ -66,6 +34,18 @@ class InterventionStock
     public function setIntervention(?Intervention $intervention): static
     {
         $this->intervention = $intervention;
+
+        return $this;
+    }
+
+    public function getStock(): ?Stock
+    {
+        return $this->stock;
+    }
+
+    public function setStock(?Stock $stock): static
+    {
+        $this->stock = $stock;
 
         return $this;
     }
