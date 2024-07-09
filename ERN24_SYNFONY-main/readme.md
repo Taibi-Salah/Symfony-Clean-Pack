@@ -13,6 +13,9 @@
 
        # Run Yarn add aos
      --> docker exec -it nodeimmo yarn add aos
+
+      # Run notifier bu
+     --> docker exec -it phpimmo composer require symfony/notifier
 ⚠️
 
 # premier lancement de docker compose
