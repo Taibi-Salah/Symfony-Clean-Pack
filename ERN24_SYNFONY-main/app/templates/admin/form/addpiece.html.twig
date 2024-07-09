@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}  
+{% include('home/partials/header.html.twig') %}
+<body>
+ <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                <h1>Ajouter une pièce</h1>
+            </div>
+            <div class="card-body">
+                <form method="post" action="#">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nom</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="reference" class="form-label">Référence</label>
+                        <input type="text" class="form-control" id="reference" name="reference" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Quantité</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" required>
+                    </div>
+                    <button type="submit" class="btn btn-success mb-3">Ajouter</button>
+                    <a href="{{ path('admin_catalogue')}}" class="btn btn-danger mb-3">Annulez</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

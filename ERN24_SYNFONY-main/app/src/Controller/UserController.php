@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Client;
-use App\Form\ClientType;  // Ensure this import is correct
+use App\Form\LoginType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Form\ClientType;  // Ensure this import is correct
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -125,10 +126,13 @@ class UserController extends AbstractController
     #[Route('/technicien', name: 'app_ticket')]
     public function ticket(): Response
     {
+    
         return $this->render('user/technicien.html.twig', [
             'controller_name' => 'HomeController',
         ]);
     }
+    
+   
 }
 
 
