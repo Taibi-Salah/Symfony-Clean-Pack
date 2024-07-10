@@ -4,25 +4,31 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block body %}
-    <h1>Admin Dashboard</h1>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                <h1>Admin Dashboard</h1>
+            </div>
+            <div class="card-body">
+                {% if app.user %}
+                    <p>Welcome, <strong>{{ app.user.email }}</strong>! You have the following roles: <strong>{{ app.user.roles|join(', ') }}</strong></p>
+                    <a href="{{ path('admin_catalogue')}}" class="btn btn-primary mb-3">Catalogue de pièces</a>
 
-    {% if app.user %}
-        <p>Welcome, {{ app.user.email }}! You have the following roles: {{ app.user.roles|join(', ') }}</p>
+                    <h2>Users</h2>
+                    <ul class="list-group mb-3">
+                        {% for user in users %}
+                            <li class="list-group-item">{{ user.email }} - Roles: {{ user.roles|join(', ') }}</li>
+                        {% endfor %}
+                    </ul>
 
-        <h2>Users</h2>
-        <ul>
-            {% for user in users %}
-                <li>{{ user.email }} - Roles: {{ user.roles|join(', ') }}</li>
-            {% endfor %}
-        </ul>
-
-        <form action="{{ path('app_logout') }}" method="post">
-            <button type="submit" class="btn btn-danger">Logout</button>
-        </form>
-    {% else %}
-        <p>You are not logged in.</p>
-        <a href="{{ path('app_login') }}">Login</a>
-    {% endif %}
+                    <form action="{{ path('app_logout') }}" method="post">
+                        <button type="submit" class="btn btn-danger">Logout</button>
+                    </form>
+                {% else %}
+                    <p>You are not logged in.</p>
+                    <a href="{{ path('app_login') }}" class="btn btn-primary">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endblock %}
-
-

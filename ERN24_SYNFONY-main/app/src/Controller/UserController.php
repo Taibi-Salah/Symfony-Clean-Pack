@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Client;
+use App\Entity\User;
+use App\Form\UserType;
 use App\Form\LoginType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Form\ClientType;  // Ensure this import is correct
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -77,27 +77,27 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/dashboard', name: 'app_dashboard')]
-    public function dashboard(): Response
-    {
-        // You can add logic here to fetch data or perform actions needed for the dashboard
-        return $this->render('dashboard.html.twig');
-    }
+    // #[Route('/dashboard', name: 'app_dashboard')]
+    // public function dashboard(): Response
+    // {
+    //     // You can add logic here to fetch data or perform actions needed for the dashboard
+    //     return $this->render('dashboard.html.twig');
+    // }
 
     #[Route('/inscription', name: 'app_inscription')]
     public function register(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
-        $client = new Client();
-        $form = $this->createForm(ClientType::class, $client);
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
         
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Encode the plain password before storing
-            $hashedPassword = $passwordHasher->hashPassword($client, $client->getPassword());
-            $client->setPassword($hashedPassword);
+            $hashedPassword = $passwordHasher->hashPassword($user, $user->getPlainPassword());
+            $user->setPassword($hashedPassword);
 
-            $this->entityManager->persist($client);
+            $this->entityManager->persist($user);
             $this->entityManager->flush();
 
             // Redirect to login page after successful registration
@@ -109,11 +109,6 @@ class UserController extends AbstractController
         ]);
     }
 
-    /**
-     * Route qui va afficher les tickets de l'utilisateur
-     * @Route("/tickets", name="app_tickets")
-     * @return Response
-     */
     #[Route('/mytickets', name: 'app_tickets')]
     public function tickets(): Response
     {
@@ -122,15 +117,18 @@ class UserController extends AbstractController
         ]);
     }
 
-    /**Route qui va afficher la gestion de ticket pour les techniciens */
     #[Route('/technicien', name: 'app_ticket')]
     public function ticket(): Response
     {
+    
         return $this->render('user/technicien.html.twig', [
             'controller_name' => 'HomeController',
         ]);
     }
+    
+   
 }
+
 
 
 

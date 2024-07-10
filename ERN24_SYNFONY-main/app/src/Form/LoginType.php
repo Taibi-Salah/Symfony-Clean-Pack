@@ -1,55 +1,39 @@
 <?php
 
-
 // src/Form/LoginType.php
 
 namespace App\Form;
 
-use App\Entity\Client;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class LoginType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('email', EmailType::class, [
                 'label' => 'Email',
-                'attr' => [
-                    'placeholder' => 'Votre email',
-                ],
+                'attr' => ['placeholder' => 'Your email'],
             ])
             ->add('password', PasswordType::class, [
-                'label' => 'Password',
-                'attr' => [
-                    'placeholder' => 'Votre mot de passe',
-                ],
+                'label' => 'Password', 
             ])
             ->add('login', SubmitType::class, [
                 'label' => 'Se connecter',
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Client::class,
+            // Configure your form options here
         ]);
     }
 }
-
-
-
-
-
-
-
-
-
 
 
