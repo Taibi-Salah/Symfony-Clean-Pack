@@ -29,6 +29,12 @@ class Ticket
     #[ORM\OneToOne(inversedBy: 'ticket', cascade: ['persist', 'remove'])]
     private ?Intervention $intervention = null;
 
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $description = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $status = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -93,4 +99,29 @@ class Ticket
 
         return $this;
     }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
 }
+
