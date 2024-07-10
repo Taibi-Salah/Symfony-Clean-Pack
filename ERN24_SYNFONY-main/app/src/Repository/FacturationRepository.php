@@ -2,39 +2,39 @@
 
 namespace App\Repository;
 
-use App\Entity\Supplier;
+use App\Entity\Facturation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Supplier>
+ * @extends ServiceEntityRepository<Facturation>
  */
-class SupplierRepository extends ServiceEntityRepository
+class FacturationRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Supplier::class);
+        parent::__construct($registry, Facturation::class);
     }
 
     //    /**
-    //     * @return Supplier[] Returns an array of Supplier objects
+    //     * @return Facturation[] Returns an array of Facturation objects
     //     */
     //    public function findByExampleField($value): array
     //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
+    //        return $this->createQueryBuilder('f')
+    //            ->andWhere('f.exampleField = :val')
     //            ->setParameter('val', $value)
-    //            ->orderBy('s.id', 'ASC')
+    //            ->orderBy('f.id', 'ASC')
     //            ->setMaxResults(10)
     //            ->getQuery()
     //            ->getResult()
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Supplier
+    //    public function findOneBySomeField($value): ?Facturation
     //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
+    //        return $this->createQueryBuilder('f')
+    //            ->andWhere('f.exampleField = :val')
     //            ->setParameter('val', $value)
     //            ->getQuery()
     //            ->getOneOrNullResult()
