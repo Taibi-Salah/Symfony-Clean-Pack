@@ -24,8 +24,8 @@ class Stock
     #[ORM\Column]
     private ?int $quantity = null;
 
-    #[ORM\Column]
-    private ?bool $isActive = null;
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $isActive = true;
 
     #[ORM\ManyToOne(inversedBy: 'stocks')]
     private ?User $supplier = null;
