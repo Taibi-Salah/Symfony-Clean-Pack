@@ -6,26 +6,28 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $role = null;
+    #[ORM\Column(type: 'json')]
+    private array $roles = [];
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    #[ORM\Column]
-    private ?bool $isActive = null;
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $isActive = true;
 
     #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
     private ?ContactInformation $contactInformation = null;
@@ -53,14 +55,18 @@ class User
         return $this->id;
     }
 
-    public function getRole(): ?string
+    public function getRoles(): array
     {
-        return $this->role;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 
-    public function setRole(string $role): static
+    public function setRoles(array $roles): self
     {
-        $this->role = $role;
+        $this->roles = $roles;
 
         return $this;
     }
@@ -70,7 +76,7 @@ class User
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -82,7 +88,7 @@ class User
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
@@ -94,7 +100,7 @@ class User
         return $this->isActive;
     }
 
-    public function setActive(bool $isActive): static
+    public function setActive(bool $isActive): self
     {
         $this->isActive = $isActive;
 
@@ -106,7 +112,7 @@ class User
         return $this->contactInformation;
     }
 
-    public function setContactInformation(?ContactInformation $contactInformation): static
+    public function setContactInformation(?ContactInformation $contactInformation): self
     {
         $this->contactInformation = $contactInformation;
 
@@ -121,7 +127,7 @@ class User
         return $this->tickets;
     }
 
-    public function addTicket(Ticket $ticket): static
+    public function addTicket(Ticket $ticket): self
     {
         if (!$this->tickets->contains($ticket)) {
             $this->tickets->add($ticket);
@@ -131,7 +137,7 @@ class User
         return $this;
     }
 
-    public function removeTicket(Ticket $ticket): static
+    public function removeTicket(Ticket $ticket): self
     {
         if ($this->tickets->removeElement($ticket)) {
             // set the owning side to null (unless already changed)
@@ -151,7 +157,7 @@ class User
         return $this->stocks;
     }
 
-    public function addStock(Stock $stock): static
+    public function addStock(Stock $stock): self
     {
         if (!$this->stocks->contains($stock)) {
             $this->stocks->add($stock);
@@ -161,7 +167,7 @@ class User
         return $this;
     }
 
-    public function removeStock(Stock $stock): static
+    public function removeStock(Stock $stock): self
     {
         if ($this->stocks->removeElement($stock)) {
             // set the owning side to null (unless already changed)
@@ -171,5 +177,21 @@ class User
         }
 
         return $this;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 }
