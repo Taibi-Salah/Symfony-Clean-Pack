@@ -37,10 +37,11 @@ class TicketRepository extends ServiceEntityRepository
     public function calculateAverageResolutionTime(): float
     {
         $qb = $this->createQueryBuilder('t')
-            ->select('avg(TIMESTAMPDIFF(HOUR, t.dateStart, t.dateEnd))')
-            ->where('t.status = :status')
-            ->setParameter('status', 'resolved')
-            ->getQuery();
+    ->select('AVG(t.dateEnd - t.dateStart) as avg_time')
+    ->where('t.status = :status')
+    ->setParameter('status', 'resolved')
+    ->getQuery();
+
 
         return (float) $qb->getSingleScalarResult();
     }
@@ -54,6 +55,3 @@ class TicketRepository extends ServiceEntityRepository
             ->getResult();
     }
 }
-
-
-

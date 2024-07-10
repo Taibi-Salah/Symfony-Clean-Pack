@@ -51,7 +51,7 @@
                         <h5 class="card-title">Tickets Récents</h5>
                         <ul class="list-group" id="recentTickets">
                             {% for ticket in recentTickets %}
-                                <li class="list-group-item">{{ ticket.title }} - {{ ticket.dateEnd|date("d/m/Y") }}</li>
+                                <li class="list-group-item">{{ ticket.getDescription() }} - {{ ticket.dateEnd|date("d/m/Y") }}</li>
                             {% endfor %}
                         </ul>
                     </div>
@@ -99,7 +99,7 @@
                                                 {{ ticket.status }}
                                             </span>
                                         </td>
-                                        <td>{{ ticket.technician ? ticket.technician.name : 'Non assigné' }}</td>
+                                        <td>{{ ticket.technicien ? ticket.technicien.email() : 'Non assigné' }}</td>
                                         <td>
                                             <button class="btn btn-sm btn-primary" onclick="editTicket({{ ticket.id }})">Éditer</button>
                                         </td>

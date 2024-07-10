@@ -26,12 +26,12 @@ class DashboardController extends AbstractController
         $resolvedToday = $this->entityManager->getRepository(Ticket::class)->countResolvedToday();
         $avgResolutionTime = $this->entityManager->getRepository(Ticket::class)->calculateAverageResolutionTime();
         $recentTickets = $this->entityManager->getRepository(Ticket::class)->findRecentTickets();
-
+        
         // Fetch all tickets
         $tickets = $this->entityManager->getRepository(Ticket::class)->findAll();
         // Fetch technicians
         $technicians = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TECHNICIAN');
-
+        
         // Combine data into an array
         $data = [
             'inProgressTickets' => $inProgressTickets,
@@ -41,7 +41,8 @@ class DashboardController extends AbstractController
             'tickets' => $tickets,
             'technicians' => $technicians,
         ];
-
+        
+    //  dd($data);
         return $this->render('home/dashboard.html.twig', $data);
     }
 }
