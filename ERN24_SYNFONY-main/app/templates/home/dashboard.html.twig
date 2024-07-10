@@ -9,10 +9,6 @@
         .card {
             margin-bottom: 20px;
         }
-        .ticket-list {
-            max-height: 600px;
-            overflow-y: auto;
-        }
     </style>
 {% endblock %}
 
@@ -21,7 +17,7 @@
 
     <div class="container mt-4">
         <h1 class="mb-4">Tableau de Bord</h1>
-        <div class="row">
+        {# <div class="row">
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-body">
@@ -78,7 +74,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> #}
 
     <div class="container mt-4">
         <h1 class="mb-4">Gestion des Tickets</h1>
@@ -176,32 +172,11 @@
 
 {% block javascripts %}
     {{ parent() }}
-   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
     <script>
-        function editTicket(ticketId) {
-            console.log("Editing ticket:", ticketId);
-            const ticket = {
-                id: ticketId,
-                title: 'Titre du ticket ' + ticketId,
-                status: 'En cours',
-                assignedTo: '1',
-                description: 'Description du ticket ' + ticketId
-            };
-
-            document.getElementById('ticketId').value = ticket.id;
-            document.getElementById('ticketTitle').value = ticket.title;
-            document.getElementById('ticketStatus').value = ticket.status;
-            document.getElementById('ticketAssignedTo').value = ticket.assignedTo;
-            document.getElementById('ticketDescription').value = ticket.description;
-        }
-
-        document.getElementById('ticketForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            alert('Ticket sauvegardé !');
-            this.reset();
-        });
-
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Graphique circulaire pour les statistiques des tickets
             var ctx = document.getElementById('ticketStats').getContext('2d');
             var myChart = new Chart(ctx, {
                 type: 'doughnut',
@@ -209,54 +184,32 @@
                     labels: ['Ouverts', 'En Cours', 'Résolus'],
                     datasets: [{
                         data: [{{ openTickets }}, {{ inProgressTickets }}, {{ resolvedToday }}],
-                        backgroundColor: ['rgba(255, 99, 132, 0.8)', 'rgba(54, 162, 235, 0.8)', 'rgba(75, 192, 192, 0.8)']
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(54, 162, 235, 0.8)',
+                            'rgba(75, 192, 192, 0.8)'
+                        ]
                     }]
                 },
                 options: {
                     responsive: true,
-                    legend: { position: 'bottom' },
-                    title: { display: true, text: 'Répartition des Tickets' }
+                    legend: {
+                        position: 'bottom',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Répartition des Tickets'
+                    }
                 }
             });
 
-            setInterval(function () {
+            // Simulation de mise à jour en temps réel
+            setInterval(function() {
                 document.getElementById('openTickets').textContent = Math.floor(Math.random() * 50);
                 document.getElementById('inProgressTickets').textContent = Math.floor(Math.random() * 30);
                 document.getElementById('resolvedToday').textContent = Math.floor(Math.random() * 20);
                 document.getElementById('avgResolutionTime').textContent = (Math.random() * 24).toFixed(1) + ' h';
             }, 5000);
         });
-
-        function showNotification(message, type = 'info') {
-            const notificationElement = document.createElement('div');
-            notificationElement.className = `alert alert-${type} alert-dismissible fade show`;
-            notificationElement.role = 'alert';
-            notificationElement.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            `;
-            document.getElementById('notifications').appendChild(notificationElement);
-
-            setTimeout(() => {
-                notificationElement.remove();
-            }, 5000);
-        }
-
-        const eventSource = new EventSource("{{ mercure('https://example.com/notifications')|escape('js') }}");
-        eventSource.onmessage = event => {
-            const data = JSON.parse(event.data);
-            showNotification(data.message, data.type === 'stock_alert' ? 'warning' : 'info');
-        };
-
-        function checkStock() {
-            fetch('/stock-alert', { method: 'POST' }).then(response => response.json()).then(data => {
-                if (data.success) { 
-                    // La notification sera gérée par le EventSource
-                }
-            });
-        }
-
-        setInterval(checkStock, 30000);
     </script>
-
 {% endblock %}
