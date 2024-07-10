@@ -20,7 +20,6 @@ class UserController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-<<<<<<< HEAD
     #[Route('/connexion', name: 'app_connexion')]
     public function login(AuthenticationUtils $authenticationUtils, Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
@@ -83,8 +82,6 @@ class UserController extends AbstractController
     //     return $this->render('dashboard.html.twig');
     // }
 
-=======
->>>>>>> b1f2385 ([/LOGIN] done , ADMIN/USER fixture done)
     #[Route('/inscription', name: 'app_inscription')]
     public function register(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
