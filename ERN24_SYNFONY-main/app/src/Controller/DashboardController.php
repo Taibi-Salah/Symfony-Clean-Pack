@@ -1,56 +1,53 @@
 <?php
 
-// src/Controller/DashboardController.php
-
 namespace App\Controller;
 
-use Symfony\Component\Mercure\Update;
-use Symfony\Component\Mercure\HubInterface;
-use Symfony\Component\HttpFoundation\Request;
+use App\Entity\Ticket;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DashboardController extends AbstractController
 {
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     #[Route('/dashboard', name: 'app_dashboard')]
     public function index(): Response
     {
-        // Données pour le tableau de bord
-        $dashboardData = [
-            'openTickets' => 25,
-            'inProgressTickets' => 15,
-            'resolvedToday' => 10,
-            'avgResolutionTime' => 4.5,
-            'recentTickets' => [
-                ['title' => 'Problème de connexion', 'date' => new \DateTime()],
-                ['title' => 'Erreur 404', 'date' => new \DateTime('-1 day')],
-                ['title' => 'Mise à jour nécessaire', 'date' => new \DateTime('-2 days')],
-            ],
-        ];
+        // Fetch data from the database
+        $inProgressTickets = $this->entityManager->getRepository(Ticket::class)->count(['status' => 'in_progress']);
+        $resolvedToday = $this->entityManager->getRepository(Ticket::class)->countResolvedToday();
+        $avgResolutionTime = $this->entityManager->getRepository(Ticket::class)->calculateAverageResolutionTime();
+        $recentTickets = $this->entityManager->getRepository(Ticket::class)->findRecentTickets();
 
-        // Données pour la gestion des tickets
-        $tickets = [
-            ['id' => 1, 'title' => 'Problème de connexion', 'status' => 'Ouvert', 'assignedTo' => 'John Doe'],
-            ['id' => 2, 'title' => 'Erreur 404', 'status' => 'En cours', 'assignedTo' => 'Jane Smith'],
-            ['id' => 3, 'title' => 'Mise à jour nécessaire', 'status' => 'Résolu', 'assignedTo' => 'Bob Johnson'],
-        ];
+        // Fetch all tickets
+        $tickets = $this->entityManager->getRepository(Ticket::class)->findAll();
+        // Fetch technicians
+        $technicians = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TECHNICIAN');
 
-        $technicians = [
-            ['id' => 1, 'name' => 'John Doe'],
-            ['id' => 2, 'name' => 'Jane Smith'],
-            ['id' => 3, 'name' => 'Bob Johnson'],
-        ];
-
-        // Combinez toutes les données
-        $data = array_merge($dashboardData, [
+        // Combine data into an array
+        $data = [
+            'inProgressTickets' => $inProgressTickets,
+            'resolvedToday' => $resolvedToday,
+            'avgResolutionTime' => $avgResolutionTime,
+            'recentTickets' => $recentTickets,
             'tickets' => $tickets,
             'technicians' => $technicians,
-        ]);
+        ];
 
         return $this->render('home/dashboard.html.twig', $data);
-
     }
+}
 
-    }
+
+
+
+
+

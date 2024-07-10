@@ -83,7 +83,7 @@ class UserController extends AbstractController
     public function dashboard(): Response
     {
         // You can add logic here to fetch data or perform actions needed for the dashboard
-        return $this->render('dashboard.html.twig');
+        return $this->render('home/dashboard.html.twig');
     }
 
     #[Route('/inscription', name: 'app_inscription')]
