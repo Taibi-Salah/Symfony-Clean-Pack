@@ -13,7 +13,8 @@
     <ul>
         <li><a href="/" class="active">Accueil<br></a></li>
         
-        {% if is_granted('ROLE_ADMIN') %}
+        {% if is_granted('ROLE_ADMIN') %} 
+        
             <li><a href="/mytickets">Tickets</a></li>
             <li><a href="/technicien">Techniciens</a></li>
             <li><a href="/reports">Rapports</a></li>

@@ -3,8 +3,6 @@
 {% block body %}  
 {{ include('home/partials/header.html.twig') }}
 <body>
- 
-
     <div class="container">
         <div class="card">
             <div class="card-header">
@@ -41,6 +39,36 @@
                         {# {% else %} #}
                             <tr>
                                 <td colspan="7" class="text-center">Aucun ticket attribué</td>
+                            </tr>
+                        {# {% endfor %} #}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+         <div class="card mt-4">
+            <div class="card-header">
+                <h2>Historique des Tickets Clôturés</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Date de Clôture</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {# {% for ticket in closed_tickets %} #}
+                            <tr>
+                                <th scope="row"> ticket.id </th>
+                         
+                                <td> ticket.description </td>
+                                <td> ticket.closed_date|date('d/m/Y')</td>
+                            </tr>
+                        {# {% else %} #}
+                            <tr>
+                                <td colspan="4" class="text-center">Aucun ticket clôturé</td>
                             </tr>
                         {# {% endfor %} #}
                     </tbody>
