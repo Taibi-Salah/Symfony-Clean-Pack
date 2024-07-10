@@ -20,15 +20,8 @@ class LoginType extends AbstractType
                 'attr' => ['placeholder' => 'Your email'],
             ])
             ->add('password', PasswordType::class, [
-<<<<<<< HEAD
-                'label' => 'Password', 
-            ])
-            ->add('login', SubmitType::class, [
-                'label' => 'Se connecter',
-=======
                 'label' => 'Password',
                 'attr' => ['placeholder' => 'Your password'],
->>>>>>> b1f2385 ([/LOGIN] done , ADMIN/USER fixture done)
             ]);
     }
 

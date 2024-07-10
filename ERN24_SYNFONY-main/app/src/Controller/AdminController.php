@@ -7,14 +7,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\UserRepository;
 
+#[Route('/admin')]
 class AdminController extends AbstractController
 {
     #[Route('/admin', name: 'admin_dashboard')]
     public function index(UserRepository $userRepository): Response
     {
         // Retrieve all users from the database
-        $users = $userRepository->findAll();
-        $this->denyAccessUnlessGranted('ROLE_USER'); //seul l'utilisateur connecté en tant qu'admin peut accéder à cette page
+        $users = $userRepository->findAll(); 
         return $this->render('admin/index.html.twig', [
             'users' => $users,
         ]);
@@ -28,7 +28,6 @@ class AdminController extends AbstractController
     #[Route('/admin/catalogue', name: 'admin_catalogue')]
     public function catalogue(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         return $this->render('admin/catalogue.html.twig');
     }
 
@@ -41,7 +40,6 @@ class AdminController extends AbstractController
     #[Route('/admin/history', name: 'admin_history')]
     public function history(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         return $this->render('admin/history.html.twig');
     }
 
@@ -53,7 +51,6 @@ class AdminController extends AbstractController
     #[Route('/admin/addpiece', name: 'app_addpiece')]
     public function addpiece(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
         return $this->render('admin/form/addpiece.html.twig', [
             'controller_name' => 'HomeController',
         ]);
@@ -67,7 +64,6 @@ class AdminController extends AbstractController
     #[Route('/admin/editpiece', name: 'app_editpiece')]
     public function updateticket(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
         return $this->render('admin/form/editpiece.html.twig', [
             'controller_name' => 'HomeController',
         ]);
