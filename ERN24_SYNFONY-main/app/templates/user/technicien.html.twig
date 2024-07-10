@@ -1,51 +1,67 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}  
-{{ include('home/partials/header.html.twig') }}
-<body>
+{% block body %}
+    {{ include('home/partials/header.html.twig') }}
+    <title>Gestion des Tickets</title>
     <div class="container">
         <div class="card">
             <div class="card-header">
-                <h1>Tickets Attribués</h1>
+                <h1 class="text-center">Gestion des Tickets</h1>
+            </div>
+            <div class="card-body">
+                <h2 class="text-center">Créer un nouveau ticket</h2>
+                {{ form_start(form) }}
+                    <div class="form-group">
+                        {{ form_row(form.description) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(form.dateStart) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(form.dateEnd) }}
+                    </div>
+                    <div class="col-12 d-flex justify-content-center mt-4">
+                        <button class="button-form" type="submit">Créer un ticket</button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h2 class="text-center">Tickets en cours</h2>
             </div>
             <div class="card-body">
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Titre</th>
                             <th scope="col">Description</th>
-                            <th scope="col">Client</th>
-                            <th scope="col">Date de Création</th>
                             <th scope="col">Statut</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {# {% for ticket in assigned_tickets %} #}
+                        {% for ticket in tickets %}
                             <tr>
-                                <th scope="row">ticket.id </th>
-                                <td> ticket.title </td>
-                                <td> ticket.description </td>
-                                <td> ticket.client_name </td>
-                                <td> ticket.creation_date|date('d/m/Y')}</td>
-                                <td> ticket.status </td>
+                                <th scope="row">{{ ticket.id }}</th>
+                                <td>{{ ticket.description }}</td>
+                                <td>{{ ticket.status }}</td>
                                 <td>
-                                    <a href="#" class="btn btn-info btn-sm">Voir</a>
                                     <a href="#" class="btn btn-warning btn-sm">Modifier</a>
-                                    <a href="#" class="btn btn-success btn-sm">Clôturer</a>
+                                    <a href="#" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous vraiment supprimer ce ticket?')">Supprimer</a>
                                 </td>
                             </tr>
-                        {# {% else %} #}
+                        {% else %}
                             <tr>
-                                <td colspan="7" class="text-center">Aucun ticket attribué</td>
+                                <td colspan="5" class="text-center">Aucun ticket en cours</td>
                             </tr>
-                        {# {% endfor %} #}
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
-         <div class="card mt-4">
+        <div class="card mt-4">
             <div class="card-header">
                 <h2>Historique des Tickets Clôturés</h2>
             </div>
@@ -59,23 +75,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {# {% for ticket in closed_tickets %} #}
+                        {% for ticket in closed_tickets %}
                             <tr>
-                                <th scope="row"> ticket.id </th>
-                         
-                                <td> ticket.description </td>
-                                <td> ticket.closed_date|date('d/m/Y')</td>
+                                <th scope="row">{{ ticket.id }}</th>
+                                <td>{{ ticket.description }}</td>
+                                <td>{{ ticket.dateEnd|date('d/m/Y') }}</td>
                             </tr>
-                        {# {% else %} #}
+                        {% else %}
                             <tr>
                                 <td colspan="4" class="text-center">Aucun ticket clôturé</td>
                             </tr>
-                        {# {% endfor %} #}
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-</body>
-{{ include('home/partials/footer.html.twig')}}
+    {{ include('home/partials/footer.html.twig') }}
 {% endblock %}
