@@ -16,7 +16,9 @@
 {{ form_start(form) }}
 {{ form_row(form.email) }} {# Assurez-vous que le champ "roles" est correctement affiché #}
 {{ form_row(form.Password) }}
-{{ form_row(form.inscription )}}
+{{ form_row(form.ContactInformation)}}
+<button name="submit" value="submit">Envoyer</button>
+
 {{ form_end(form) }}
 
                     <p class="text-center mt-3">Vous avez déjà un compte ? <a href="{{ path('app_connexion') }}">Connectez-vous</a></p>
