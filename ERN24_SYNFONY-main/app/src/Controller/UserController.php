@@ -126,10 +126,13 @@ class UserController extends AbstractController
     #[Route('/technicien', name: 'app_ticket')]
     public function ticket(): Response
     {
+    
         return $this->render('user/technicien.html.twig', [
             'controller_name' => 'HomeController',
         ]);
     }
+    
+   
 }
 
 

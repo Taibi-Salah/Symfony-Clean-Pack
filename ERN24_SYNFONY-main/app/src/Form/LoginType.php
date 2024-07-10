@@ -25,10 +25,7 @@ class LoginType extends AbstractType
                 ],
             ])
             ->add('password', PasswordType::class, [
-                'label' => 'Password',
-                'attr' => [
-                    'placeholder' => 'Votre mot de passe',
-                ],
+                'label' => 'Password', 
             ])
             ->add('login', SubmitType::class, [
                 'label' => 'Se connecter',
