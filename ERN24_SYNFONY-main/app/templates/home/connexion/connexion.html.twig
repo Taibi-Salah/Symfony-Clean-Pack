@@ -7,17 +7,26 @@
         {{ include('home/partials/header.html.twig') }}
         <section id="hero" class="section form">
             <div class="d-flex justify-content-center">
-                {{ form_start(form, {'attr': {'class': 'php-email-form', 'data-aos': 'fade-up', 'data-aos-delay': '200'}}) }}
-                <div class="row gy-4">
-                    <div class="col-12">
-                        {{ form_row(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Votre email'}}) }}
-                    </div>
+                <form method="post" action="{{ path('app_connexion') }}" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+                    <div class="row gy-4">
+                        <div class="col-12">
+                            <label for="inputEmail">Email</label>
+                            <input type="email" value="{{ last_username }}" name="_username" id="inputEmail" class="form-control" placeholder="Votre email" required autofocus>
+                        </div>
 
-                    <div class="col-12">
-                        {{ form_row(form.password, {'attr': {'class': 'form-control', 'placeholder': 'Votre mot de passe'}}) }}
-                    </div>
+                        <div class="col-12">
+                            <label for="inputPassword">Mot de passe</label>
+                            <input type="password" name="_password" id="inputPassword" class="form-control" placeholder="Votre mot de passe" required>
+                        </div>
+                        
+                        <div class="col-12 d-flex justify-content-center">
+                            <button type="submit" class="btn btn-primary">Se connecter</button>
+                        </div>
 
-                {{ form_end(form) }}
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    </div>
+                </form>
+
                 {% if error %}
                     <div class="error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                 {% endif %}
@@ -29,6 +38,8 @@
         {{ include('home/partials/footer.html.twig') }}
     </body>
 {% endblock %}
+
+
 
 
 

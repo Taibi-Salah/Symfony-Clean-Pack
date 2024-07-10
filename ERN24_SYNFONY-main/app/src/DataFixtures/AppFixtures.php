@@ -1,5 +1,9 @@
 <?php
 
+// src/DataFixtures/AppFixtures.php
+
+// src/DataFixtures/AppFixtures.php
+
 namespace App\DataFixtures;
 
 use App\Entity\User;
@@ -9,7 +13,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
-    private $passwordHasher;
+    private UserPasswordHasherInterface $passwordHasher;
 
     public function __construct(UserPasswordHasherInterface $passwordHasher)
     {
@@ -42,5 +46,6 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 }
+
 
 
