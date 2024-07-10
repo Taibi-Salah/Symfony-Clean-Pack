@@ -6,9 +6,8 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 
-class UserFixtures extends Fixture implements FixtureGroupInterface
+class UserFixtures extends Fixture
 {
     private $passwordHasher;
 
@@ -68,10 +67,5 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
         $this->addReference('user-3', $technicien2);
 
         $manager->flush();
-    }
-
-    public static function getGroups(): array
-    {
-        return ['UsersFixtures'];
     }
 }
