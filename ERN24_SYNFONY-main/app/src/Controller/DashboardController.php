@@ -22,18 +22,28 @@ class DashboardController extends AbstractController
     public function index(): Response
     {
         // Fetch data from the database
+        $openTickets = $this->entityManager->getRepository(Ticket::class)->count(['status' => 'open']);
         $inProgressTickets = $this->entityManager->getRepository(Ticket::class)->count(['status' => 'in_progress']);
         $resolvedToday = $this->entityManager->getRepository(Ticket::class)->countResolvedToday();
         $avgResolutionTime = $this->entityManager->getRepository(Ticket::class)->calculateAverageResolutionTime();
         $recentTickets = $this->entityManager->getRepository(Ticket::class)->findRecentTickets();
+<<<<<<< HEAD
 
+=======
+ 
+>>>>>>> 6491e8b (tableau de bord fonctionnel)
         // Fetch all tickets
         $tickets = $this->entityManager->getRepository(Ticket::class)->findAll();
         // Fetch technicians
         $technicians = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TECHNICIAN');
+<<<<<<< HEAD
 
+=======
+ 
+>>>>>>> 6491e8b (tableau de bord fonctionnel)
         // Combine data into an array
         $data = [
+            'openTickets' => $openTickets,
             'inProgressTickets' => $inProgressTickets,
             'resolvedToday' => $resolvedToday,
             'avgResolutionTime' => $avgResolutionTime,
@@ -41,10 +51,14 @@ class DashboardController extends AbstractController
             'tickets' => $tickets,
             'technicians' => $technicians,
         ];
+<<<<<<< HEAD
 
+=======
+ 
+>>>>>>> 6491e8b (tableau de bord fonctionnel)
         return $this->render('home/dashboard.html.twig', $data);
     }
-}
+ }
 
 
 
