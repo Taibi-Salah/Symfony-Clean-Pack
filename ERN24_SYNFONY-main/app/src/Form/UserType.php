@@ -60,7 +60,7 @@ class UserType extends AbstractType
 
             
             ->add('ContactInformation', ContactInformationType::class,
-            ['label' => false,
+            [ 'label' => false,
                 'label_attr' => ['class' => 'form-control'],
             ])
             ;

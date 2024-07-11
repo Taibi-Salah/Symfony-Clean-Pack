@@ -21,7 +21,7 @@ class ContactInformationType extends AbstractType
             [
                 'label' => 'Nom :',
                 'label_attr' => [
-                    'class' => 'form-label'
+                    'class' => 'form-label mt-3'
 
                 ],
                 'attr' => ['placeholder' => 'Votre nom', 'class' => 'form-control'],
@@ -30,7 +30,7 @@ class ContactInformationType extends AbstractType
             [
                 'label' => 'Prénom :',
                 'label_attr' => [
-                    'class' => 'form-label'
+                    'class' => 'form-label mt-3'
                 ],
                 'attr' => ['placeholder' => 'Votre prénom', 'class' => 'form-control'],
             ])
@@ -38,7 +38,7 @@ class ContactInformationType extends AbstractType
             [
                 'label' => 'Téléphone :',
                 'label_attr' => [
-                    'class' => 'form-label'
+                    'class' => 'form-label mt-3'
                 ],
                 'attr' => ['placeholder' => 'Votre numéro de téléphone', 'class' => 'form-control'],
             ])
@@ -46,7 +46,7 @@ class ContactInformationType extends AbstractType
             [
                 'label' => 'Adresse :',
                 'label_attr' => [
-                    'class' => 'form-label'
+                    'class' => 'form-label mt-3'
                 ],
                 'attr' => ['placeholder' => 'Votre adresse', 'class' => 'form-control'],
             ])
@@ -54,7 +54,7 @@ class ContactInformationType extends AbstractType
             [
                 'label' => 'Ville :',
                 'label_attr' => [
-                    'class' => 'form-label'
+                    'class' => 'form-label mt-3'
                 ],
                 'attr' => ['placeholder' => 'Votre ville', 'class' => 'form-control'],
             ])
@@ -62,7 +62,7 @@ class ContactInformationType extends AbstractType
             [
                 'label' => 'Code postal :',
                 'label_attr' => [
-                    'class' => 'form-label'
+                    'class' => 'form-label mt-3'
                 ],
                 'attr' => ['placeholder' => 'Votre code postal', 'class' => 'form-control'],
             ])
@@ -71,7 +71,7 @@ class ContactInformationType extends AbstractType
             [
                 'label' => 'Pays :',
                 'label_attr' => [
-                    'class' => 'form-label'
+                    'class' => 'form-label mt-3'
                 ],
                 'attr' => ['placeholder' => 'Votre pays', 'class' => 'form-control'],
             ]);
