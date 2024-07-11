@@ -42,8 +42,9 @@ security:
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/technical, roles: ROLE_TECHNICAL }
-        - { path: ^/, roles: PUBLIC_ACCESS }
         - { path: ^/dashboard, roles: ROLE_ADMIN }
+        - { path: ^/mytickets, roles: ROLE_USER }
+        - { path: ^/, roles: PUBLIC_ACCESS }
 
 
 when@test:

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Ticket;
+use App\Entity\Facturation;
 use App\Form\UserType;
 use App\Form\LoginType;
 use App\Form\TicketType;
@@ -15,8 +16,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class UserController extends AbstractController
 {
@@ -82,22 +82,21 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // Encode the plain password before storing
             $user->setPassword($passwordHasher->hashPassword($user, $user->getPassword()));
-           
+
             $this->entityManager->persist($user);
             $this->entityManager->flush();
-            //ici on peut envoyer un mail de confirmation
+
+            $message = 'Registration successful. Please check your email for confirmation.';
             $this->addFlash('success', $message);
-          
 
             // Redirect to login page after successful registration
             return $this->redirectToRoute('app_login');
-            }
-        
+        }
+
         return $this->render('home/connexion/inscription.html.twig', [
             'form' => $form->createView(),
         ]);
-        }
-
+    }
 
     #[Route('/mytickets', name: 'app_tickets')]
     public function tickets(Request $request): Response
@@ -118,7 +117,7 @@ class UserController extends AbstractController
 
         $tickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'user' => $this->getUser(),
-            'status' => 'open'
+            'status' => ['open', 'paid']
         ]);
         $closedTickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'user' => $this->getUser(),
@@ -132,9 +131,14 @@ class UserController extends AbstractController
         ]);
     }
 
+
     #[Route('/technicien', name: 'app_ticket')]
     public function technicien(): Response
     {
+        if (!$this->isGranted('ROLE_TECHNICIEN')) {
+            throw new AccessDeniedException('Access Denied. You do not have permission to access this page.');
+        }
+
         $technicien = $this->getUser();
         $tickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'technicien' => $technicien,
@@ -174,12 +178,51 @@ class UserController extends AbstractController
         $ticket->setStatus('closed');
         $ticket->setDateEnd(new \DateTime());
 
+        $description = $this->generateFinalReport($ticket);
+
+        $facturation = new Facturation();
+        $facturation->setValue($description);
+
+        $this->entityManager->persist($facturation);
         $this->entityManager->flush();
 
         $this->addFlash('success', 'Ticket closed successfully.');
         return $this->redirectToRoute('app_ticket');
     }
+
+    private function generateFinalReport(Ticket $ticket): string
+    {
+        $technicianId = $ticket->getTechnicien() ? $ticket->getTechnicien()->getId() : 'N/A';
+        $clientId = $ticket->getUser() ? $ticket->getUser()->getId() : 'N/A';
+        $creationDate = $ticket->getDateStart() ? $ticket->getDateStart()->format('d/m/Y H:i') : 'N/A';
+        $closingDate = $ticket->getDateEnd() ? $ticket->getDateEnd()->format('d/m/Y H:i') : 'N/A';
+
+        $stockUsages = $ticket->getIntervention()->getInterventionStocks();
+        $stockDetails = '';
+
+        foreach ($stockUsages as $stockUsage) {
+            $stockDetails .= sprintf(
+                "Date d'utilisation: %s, Stock: %s, Quantité Utilisée: %d, Description: %s\n",
+                $stockUsage->getUsedAt()->format('d/m/Y H:i'),
+                $stockUsage->getStock()->getLabel(),
+                $stockUsage->getQuantityUsed(),
+                $stockUsage->getDescription()
+            );
+        }
+
+        return sprintf(
+            "Ticket ID: %d\nTechnician ID: %s\nClient ID: %s\nDate de Création: %s\nDate de Clôture: %s\n\nStock Utilisé:\n%s",
+            $ticket->getId(),
+            $technicianId,
+            $clientId,
+            $creationDate,
+            $closingDate,
+            $stockDetails
+        );
+    }
 }
+
+
 
 
 

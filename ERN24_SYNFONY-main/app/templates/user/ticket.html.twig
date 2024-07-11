@@ -50,6 +50,9 @@
                                 <td>
                                     <a href="#" class="btn btn-warning btn-sm">Modifier</a>
                                     <a href="#" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous vraiment supprimer ce ticket?')">Supprimer</a>
+                                    {% if ticket.status == 'open' %}
+                                        <a href="{{ path('create_checkout_session', {'ticketId': ticket.id}) }}" class="btn btn-success btn-sm">Payez Ici pour la prise en charge d'un technicien</a>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% else %}
@@ -93,6 +96,7 @@
     </div>
     {{ include('home/partials/footer.html.twig') }}
 {% endblock %}
+
 
 
 
