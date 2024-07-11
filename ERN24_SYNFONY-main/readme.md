@@ -16,6 +16,8 @@
 
       # Run notifier bu
      --> docker exec -it phpimmo composer require symfony/notifier
+
+     !! docker exec -it phpimmo composer require fakerphp/faker --dev
 ⚠️
 
 # premier lancement de docker compose
