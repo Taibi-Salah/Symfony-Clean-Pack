@@ -71,7 +71,7 @@ class TicketRepository extends ServiceEntityRepository
             ->leftJoin('tech.contactInformation', 'tci')
             ->getQuery()
             ->getResult();
-    
+
         foreach ($q as $ticket) {
             // Ensure the user, technicien, and their contactInformation are fully loaded
             if ($ticket->getUser()) {
@@ -86,10 +86,8 @@ class TicketRepository extends ServiceEntityRepository
                     $ticket->getTechnicien()->getContactInformation()->getId();
                 }
             }
-    
-         
         }
-    
-       
+        //dd($q);
+        return $q;
     }
-    }
+}
