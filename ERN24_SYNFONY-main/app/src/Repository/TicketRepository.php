@@ -63,3 +63,36 @@ class TicketRepository extends ServiceEntityRepository
 
 
 
+<<<<<<< HEAD
+=======
+    public function findInfos()
+    {
+        $q = $this->createQueryBuilder('t')
+            ->select('t, u, tech, uci, tci')
+            ->leftJoin('t.user', 'u')
+            ->leftJoin('t.technicien', 'tech')
+            ->leftJoin('u.contactInformation', 'uci')
+            ->leftJoin('tech.contactInformation', 'tci')
+            ->getQuery()
+            ->getResult();
+
+        foreach ($q as $ticket) {
+            // Ensure the user, technicien, and their contactInformation are fully loaded
+            if ($ticket->getUser()) {
+                $ticket->getUser()->getId();
+                if ($ticket->getUser()->getContactInformation()) {
+                    $ticket->getUser()->getContactInformation()->getId();
+                }
+            }
+            if ($ticket->getTechnicien()) {
+                $ticket->getTechnicien()->getId();
+                if ($ticket->getTechnicien()->getContactInformation()) {
+                    $ticket->getTechnicien()->getContactInformation()->getId();
+                }
+            }
+        }
+        //dd($q);
+        return $q;
+    }
+}
+>>>>>>> 23bf654 (ticket+nom ok)

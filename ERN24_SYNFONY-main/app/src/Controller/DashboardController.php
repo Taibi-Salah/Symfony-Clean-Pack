@@ -31,10 +31,15 @@ class DashboardController extends AbstractController
 
         // Fetch all tickets
         $tickets = $this->entityManager->getRepository(Ticket::class)->findinfos();
-       
         // Fetch technicians
+<<<<<<< HEAD
         $technicians = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TECHNICIAN');
 
+=======
+        $technicians = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TECHNICIEN');
+      
+ 
+>>>>>>> 23bf654 (ticket+nom ok)
         // Combine data into an array
         $data = [
             'openTickets' => $openTickets,
