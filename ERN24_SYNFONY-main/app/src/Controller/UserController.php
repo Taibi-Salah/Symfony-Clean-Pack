@@ -85,10 +85,6 @@ class UserController extends AbstractController
            
             $this->entityManager->persist($user);
             $this->entityManager->flush();
-            //ici on peut envoyer un mail de confirmation
-            $this->addFlash('success', $message);
-          
-
             // Redirect to login page after successful registration
             return $this->redirectToRoute('app_login');
             }
