@@ -11,9 +11,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class UserController extends AbstractController
 {
@@ -87,27 +90,33 @@ class UserController extends AbstractController
     }
 
     #[Route('/inscription', name: 'app_inscription')]
-    public function register(Request $request, UserPasswordHasherInterface $passwordHasher): Response
+    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
-        
+
+        $message= 'Inscription Terminée avec succès, veuillez vous connecter pour continuer';
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Encode the plain password before storing
             $user->setPassword($passwordHasher->hashPassword($user, $user->getPassword()));
+           
             $this->entityManager->persist($user);
             $this->entityManager->flush();
+            //ici on peut envoyer un mail de confirmation
+            $this->addFlash('success', $message);
+          
 
             // Redirect to login page after successful registration
-            return $this->redirectToRoute('app_tickets');
-        }
-
+            return $this->redirectToRoute('app_login');
+            }
+        
         return $this->render('home/connexion/inscription.html.twig', [
             'form' => $form->createView(),
         ]);
-    }
+        }
+
 
     #[Route('/mytickets', name: 'app_tickets')]
     public function tickets(Request $request): Response
