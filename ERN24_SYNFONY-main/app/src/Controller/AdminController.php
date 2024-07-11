@@ -40,14 +40,12 @@ class AdminController extends AbstractController
     #[Route('/admin/catalogue', name: 'admin_catalogue')]
     public function catalogue(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         return $this->render('admin/catalogue.html.twig');
     }
 
     #[Route('/admin/history', name: 'admin_history')]
     public function history(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         return $this->render('admin/history.html.twig');
     }
 

@@ -96,14 +96,12 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Encode the plain password before storing
-            $hashedPassword = $passwordHasher->hashPassword($user, $user->getPlainPassword());
-            $user->setPassword($hashedPassword);
-
+            $user->setPassword($passwordHasher->hashPassword($user, $user->getPassword()));
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 
             // Redirect to login page after successful registration
-            return $this->redirectToRoute('app_connexion');
+            return $this->redirectToRoute('app_tickets');
         }
 
         return $this->render('home/connexion/inscription.html.twig', [
