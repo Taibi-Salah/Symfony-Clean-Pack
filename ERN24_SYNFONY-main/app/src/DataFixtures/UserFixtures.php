@@ -66,6 +66,30 @@ class UserFixtures extends Fixture
         $manager->persist($technicien2);
         $this->addReference('user-3', $technicien2);
 
+        // Create a first supplier user
+        $supplier1 = new User();
+        $supplier1->setEmail('supplier1@example.com');
+        $supplier1->setRoles(['ROLE_SUPPLIER']);
+        $supplier1->setPassword($this->passwordHasher->hashPassword(
+            $supplier1,
+            'supplier1'
+        ));
+        $supplier1->setActive(true);
+        $manager->persist($supplier1);
+        $this->addReference('user-4', $supplier1);
+
+        // Create a second supplier user
+        $supplier2 = new User();
+        $supplier2->setEmail('supplier2@example.com');
+        $supplier2->setRoles(['ROLE_SUPPLIER']);
+        $supplier2->setPassword($this->passwordHasher->hashPassword(
+            $supplier2,
+            'supplier2'
+        ));
+        $supplier2->setActive(true);
+        $manager->persist($supplier2);
+        $this->addReference('user-5', $supplier2);
+
         $manager->flush();
     }
 }

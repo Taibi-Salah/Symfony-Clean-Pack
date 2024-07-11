@@ -14,7 +14,7 @@
                 {% if app.user %}
                     <p>Welcome, <strong>{{ app.user.email }}</strong>! You have the following roles: <strong>{{ app.user.roles|join(', ') }}</strong></p>
                     <a href="{{ path('admin_catalogue')}}" class="btn btn-primary mb-3">Catalogue de pièces</a>
-                    <a href="{{ path('supplier_list')}}" class="btn btn-primary mb-3">Supplier list</a>
+                    <a href="{{ path('user_supplier')}}" class="btn btn-primary mb-3">Supplier list</a>
 
                     <h2>Users</h2>
                     <ul class="list-group mb-3">
@@ -26,80 +26,83 @@
                     <h2>Tickets</h2>
                     <table class="table table-hover">
                         <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Description</th>
-                                <th>Date de Début</th>
-                                <th>Date de Fin</th>
-                                <th>Statut</th>
-                                <th>Assigné à</th>
-                                <th>Intervention</th>
-                                <th>Actions</th>
-                            </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Description</th>
+                            <th>Date de Début</th>
+                            <th>Date de Fin</th>
+                            <th>Statut</th>
+                            <th>Assigné à</th>
+                            <th>Intervention</th>
+                            <th>Actions</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            {% for ticket in tickets %}
-                                <tr>
-                                    <td>{{ ticket.id }}</td>
-                                    <td>{{ ticket.description }}</td>
-                                    <td>{{ ticket.dateStart|date('d/m/Y H:i') }}</td>
-                                    <td>{{ ticket.dateEnd|date('d/m/Y H:i') }}</td>
-                                    <td>{{ ticket.status }}</td>
-                                    <td>{{ ticket.technicien ? ticket.technicien.email : 'Non assigné' }}</td>
-                                    <td>{{ ticket.intervention ? ticket.intervention.label : 'Non assigné' }}</td>
-                                    <td>
-                                        <form method="post" action="{{ path('admin_assign_ticket', {id: ticket.id}) }}">
-                                            <select name="technician_id" class="form-select">
-                                                <option value="">Choisir un technicien</option>
-                                                {% for technician in technicians %}
-                                                    <option value="{{ technician.id }}" {% if ticket.technicien and ticket.technicien.id == technician.id %}selected{% endif %}>
-                                                        {{ technician.email }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
-                                            <button type="submit" class="btn btn-sm btn-primary mt-2">Assigner</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            {% endfor %}
+                        {% for ticket in tickets %}
+                            <tr>
+                                <td>{{ ticket.id }}</td>
+                                <td>{{ ticket.description }}</td>
+                                <td>{{ ticket.dateStart|date('d/m/Y H:i') }}</td>
+                                <td>{{ ticket.dateEnd|date('d/m/Y H:i') }}</td>
+                                <td>{{ ticket.status }}</td>
+                                <td>{{ ticket.technicien ? ticket.technicien.email : 'Non assigné' }}</td>
+                                <td>{{ ticket.intervention ? ticket.intervention.label : 'Non assigné' }}</td>
+                                <td>
+                                    <form method="post" action="{{ path('admin_assign_ticket', {id: ticket.id}) }}" class="ajax-form">
+                                        <select name="technician_id" class="form-select">
+                                            <option value="">Choisir un technicien</option>
+                                            {% for technician in technicians %}
+                                                <option value="{{ technician.id }}" {% if ticket.technicien and ticket.technicien.id == technician.id %}selected{% endif %}>
+                                                    {{ technician.email }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="btn btn-sm btn-primary mt-2">Assigner</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
 
-                    <h2>supply</h2>
+                    <h2>Supply</h2>
                     <table class="table table-hover">
                         <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Label</th>
-                                <th>Reference number</th>
-                                <th>Quantity</th>
-                                <th>Supplier</th>
-                                <th>Actions</th>
-                            </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Label</th>
+                            <th>Reference number</th>
+                            <th>Quantity</th>
+                            <th>Active</th>
+                            <th>Supplier</th>
+                            <th>Actions</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            {% for stock in stocks %}
-                                <tr>
-                                    <td>{{ stock.id }}</td>
-                                    <td>{{ stock.label }}</td>
-                                    <td>{{ stock.referenceNb }}</td>
-                                    <td>{{ stock.quantity }}</td>
-                                    <td>{{ stock.isActive }}</td>
-                                    <td>
-                                        <form method="post" action="{{ path('supplier_list', {id: stock.id}) }}">
-                                            <select name="supplier_id" class="form-select">
-                                                <option value="">Choisir un fournisseur</option>
-{#                                                {% for supplier in suppliers %}#}
-{#                                                    <option value="{{ supplier.id }}" {% if stock.supplier and stock.supplier.id == supplier.id %}selected{% endif %}>#}
-{#                                                        {{ supplier.name }}#}
-{#                                                    </option>#}
-{#                                                {% endfor %}#}
-                                            </select>
-                                            <button type="submit" class="btn btn-sm btn-primary mt-2">Assigner</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            {% endfor %}
+                        {% for stock in stocks %}
+                            <tr>
+                                <td>{{ stock.id }}</td>
+                                <td>{{ stock.label }}</td>
+                                <td>{{ stock.referenceNb }}</td>
+                                <td>{{ stock.quantity }}</td>
+                                <td>{{ stock.isActive ? 'Yes' : 'No' }}</td>
+                                <td>{{ stock.supplier ? stock.supplier.email : 'No supplier' }}</td>
+                                <td>
+                                    <form method="post" action="{{ path('admin_assign_supplier', {id: stock.id}) }}" class="ajax-form">
+                                        <select name="supplier_id" class="form-select">
+                                            <option value="">Choisir un fournisseur</option>
+                                            {% for supplier in suppliers %}
+                                                <option value="{{ supplier.id }}" {% if stock.supplier and stock.supplier.id == supplier.id %}selected{% endif %}>
+                                                    {{ supplier.email }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="btn btn-sm btn-primary mt-2">Assigner</button>
+                                    </form>
+
+                                </td>
+                            </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
                     <form action="{{ path('app_logout') }}" method="post">
@@ -113,7 +116,32 @@
         </div>
     </div>
     {{ include('home/partials/footer.html.twig') }}
+
+    <script>
+        document.querySelectorAll('.ajax-form').forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                var formData = new FormData(form);
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Supplier updated successfully.');
+                        } else {
+                            alert('Failed to update supplier.');
+                        }
+                    })
+                    .catch(error => {
+                        alert('An error occurred.');
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    </script>
 {% endblock %}
-
-
-

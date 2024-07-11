@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\StockRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -106,12 +107,37 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('admin_dashboard');
     }
 
-    #[Route('/admin/supplierList', name: 'supplier_list')]
-    public function supplierList(): Response
+    #[Route('/user/supplier-list', name: 'user_supplier')]
+    public function supplierList(StockRepository $stockRepository, UserRepository $userRepository): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        return $this->render('admin/supplier-list.html.twig');
+        $stocks = $stockRepository->findAll();
+        $suppliers = $userRepository->findByRole('ROLE_SUPPLIER');
+
+        return $this->render('user/supplier.html.twig', [
+            'stocks' => $stocks,
+            'suppliers' => $suppliers,
+        ]);
     }
 
+    #[Route('/admin/assign-supplier/{id}', name: 'admin_assign_supplier', methods: ['POST'])]
+    public function assignSupplier($id, Request $request, StockRepository $stockRepository, UserRepository $userRepository, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $stock = $stockRepository->find($id);
+        if (!$stock) {
+            return new JsonResponse(['success' => false], 404);
+        }
+
+        $supplierId = $request->request->get('supplier_id');
+        $supplier = $userRepository->find($supplierId);
+        if (!$supplier) {
+            return new JsonResponse(['success' => false], 404);
+        }
+
+        $stock->setSupplier($supplier);
+        $entityManager->persist($stock);
+        $entityManager->flush();
+
+        return new JsonResponse(['success' => true]);
+    }
 
 }
