@@ -77,7 +77,6 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-<<<<<<< HEAD
             // Encode the plain password before storing
             $user->setPassword($passwordHasher->hashPassword($user, $user->getPassword()));
             $this->entityManager->persist($user);
@@ -85,15 +84,6 @@ class UserController extends AbstractController
 
             // Redirect to login page after successful registration
             return $this->redirectToRoute('app_tickets');
-=======
-            $hashedPassword = $passwordHasher->hashPassword($user, $user->getPlainPassword());
-            $user->setPassword($hashedPassword);
-
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
-
-            return $this->redirectToRoute('app_connexion');
->>>>>>> ea8c31a (BACKEND 80% : Technicien[DONE] (Gestion render , gestion et cloturation tickets))
         }
 
         return $this->render('home/connexion/inscription.html.twig', [
