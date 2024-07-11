@@ -18,6 +18,9 @@
      --> docker exec -it phpimmo composer require symfony/notifier
 
      !! docker exec -it phpimmo composer require fakerphp/faker --dev
+
+
+     !! docker exec -it phpimmo composer require stripe/stripe-php
 ⚠️
 
 # premier lancement de docker compose
