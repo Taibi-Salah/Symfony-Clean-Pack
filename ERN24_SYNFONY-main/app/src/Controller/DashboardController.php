@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\ContactInformation;
 use App\Entity\Ticket;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,25 +23,18 @@ class DashboardController extends AbstractController
     public function index(): Response
     {
         // Fetch data from the database
-        $openTickets = $this->entityManager->getRepository(Ticket::class)->count(['status' => 'open']);
-        $inProgressTickets = $this->entityManager->getRepository(Ticket::class)->count(['status' => 'in_progress']);
-        $resolvedToday = $this->entityManager->getRepository(Ticket::class)->countResolvedToday();
+        $openTickets = $this->entityManager->getRepository(Ticket::class)->count(['status' => 'ouvert']);
+        $inProgressTickets = $this->entityManager->getRepository(Ticket::class)->count(['status' => 'en cours']);
+        $resolvedToday = $this->entityManager->getRepository(Ticket::class)->count(['status' => 'resolus']);
         $avgResolutionTime = $this->entityManager->getRepository(Ticket::class)->calculateAverageResolutionTime();
         $recentTickets = $this->entityManager->getRepository(Ticket::class)->findRecentTickets();
-<<<<<<< HEAD
 
-=======
- 
->>>>>>> 6491e8b (tableau de bord fonctionnel)
         // Fetch all tickets
-        $tickets = $this->entityManager->getRepository(Ticket::class)->findAll();
+        $tickets = $this->entityManager->getRepository(Ticket::class)->findinfos();
+       
         // Fetch technicians
         $technicians = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TECHNICIAN');
-<<<<<<< HEAD
 
-=======
- 
->>>>>>> 6491e8b (tableau de bord fonctionnel)
         // Combine data into an array
         $data = [
             'openTickets' => $openTickets,
@@ -50,12 +44,9 @@ class DashboardController extends AbstractController
             'recentTickets' => $recentTickets,
             'tickets' => $tickets,
             'technicians' => $technicians,
+           
         ];
-<<<<<<< HEAD
-
-=======
  
->>>>>>> 6491e8b (tableau de bord fonctionnel)
         return $this->render('home/dashboard.html.twig', $data);
     }
  }

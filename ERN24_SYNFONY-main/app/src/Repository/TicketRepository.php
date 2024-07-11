@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Ticket;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Ticket|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,10 +15,15 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TicketRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+
+    private $userRepository;
+    public function __construct(ManagerRegistry $registry, UserRepository $userRepository)
     {
         parent::__construct($registry, Ticket::class);
+        $this->userRepository = $userRepository;
     }
+
+
 
     public function countResolvedToday(): int
     {

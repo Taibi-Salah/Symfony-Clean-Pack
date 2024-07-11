@@ -66,11 +66,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/dashboard', name: 'app_dashboard')]
-    public function dashboard(): Response
-    {
-        return $this->render('home/dashboard.html.twig');
-    }
+
 
     #[Route('/inscription', name: 'app_inscription')]
     public function register(Request $request, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator): Response
@@ -121,7 +117,7 @@ class UserController extends AbstractController
         ]);
         $closedTickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'user' => $this->getUser(),
-            'status' => 'closed'
+            'status' => 'resolus'
         ]);
 
         return $this->render('user/ticket.html.twig', [
