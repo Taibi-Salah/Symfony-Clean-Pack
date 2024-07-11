@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\StockRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,18 +23,22 @@ class AdminController extends AbstractController
     }
 
     #[Route('/admin', name: 'admin_dashboard')]
-    public function index(UserRepository $userRepository, TicketRepository $ticketRepository): Response
+    public function index(UserRepository $userRepository, TicketRepository $ticketRepository, StockRepository $stockRepository): Response
     {
         // Retrieve all users and tickets from the database
         $users = $userRepository->findAll();
         $tickets = $ticketRepository->findAll();
+        $stocks = $stockRepository->findAll();
         $technicians = $userRepository->findByRole('ROLE_TECHNICIEN');
+        $suppliers = $userRepository->findByRole('ROLE_SUPPLIER');
 
         $this->denyAccessUnlessGranted('ROLE_ADMIN'); //seul l'utilisateur connecté en tant qu'admin peut accéder à cette page
         return $this->render('admin/index.html.twig', [
             'users' => $users,
             'tickets' => $tickets,
             'technicians' => $technicians,
+            'stocks' => $stocks,
+            'suppliers' => $suppliers,
         ]);
     }
 
@@ -100,11 +105,13 @@ class AdminController extends AbstractController
 
         return $this->redirectToRoute('admin_dashboard');
     }
+
+    #[Route('/admin/supplierList', name: 'supplier_list')]
+    public function supplierList(): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        return $this->render('admin/supplier-list.html.twig');
+    }
+
+
 }
-
-
-
-
-
-
-

@@ -1,10 +1,13 @@
 {# templates/security/login.html.twig #}
 {% extends 'base.html.twig' %}
 
+{% block title %}TR | Login{% endblock %}
+
 {% block body %}
 
-<body class="bg-light">
+<!-- ======= Login Section ======= -->
   <div class="container">
+  {{ include('home/partials/header.html.twig') }}
     <div class="row justify-content-center align-items-center min-vh-100">
       <div class="col-md-6 col-lg-4">
         <div class="card shadow-lg">
@@ -38,6 +41,7 @@
           </div>
         </div>
       </div>
+  {{ include('home/partials/footer.html.twig') }}
     </div>
   </div>
 

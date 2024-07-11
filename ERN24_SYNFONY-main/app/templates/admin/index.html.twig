@@ -1,8 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Admin Dashboard{% endblock %}
+{% block title %}TR | Admin dashboard{% endblock %}
 
 {% block body %}
+    {{ include('home/partials/header.html.twig') }}
+
     <div class="container mt-5">
         <div class="card">
             <div class="card-header">
@@ -12,6 +14,7 @@
                 {% if app.user %}
                     <p>Welcome, <strong>{{ app.user.email }}</strong>! You have the following roles: <strong>{{ app.user.roles|join(', ') }}</strong></p>
                     <a href="{{ path('admin_catalogue')}}" class="btn btn-primary mb-3">Catalogue de pièces</a>
+                    <a href="{{ path('supplier_list')}}" class="btn btn-primary mb-3">Supplier list</a>
 
                     <h2>Users</h2>
                     <ul class="list-group mb-3">
@@ -62,6 +65,43 @@
                         </tbody>
                     </table>
 
+                    <h2>supply</h2>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Label</th>
+                                <th>Reference number</th>
+                                <th>Quantity</th>
+                                <th>Supplier</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stock in stocks %}
+                                <tr>
+                                    <td>{{ stock.id }}</td>
+                                    <td>{{ stock.label }}</td>
+                                    <td>{{ stock.referenceNb }}</td>
+                                    <td>{{ stock.quantity }}</td>
+                                    <td>{{ stock.isActive }}</td>
+                                    <td>
+                                        <form method="post" action="{{ path('supplier_list', {id: stock.id}) }}">
+                                            <select name="supplier_id" class="form-select">
+                                                <option value="">Choisir un fournisseur</option>
+{#                                                {% for supplier in suppliers %}#}
+{#                                                    <option value="{{ supplier.id }}" {% if stock.supplier and stock.supplier.id == supplier.id %}selected{% endif %}>#}
+{#                                                        {{ supplier.name }}#}
+{#                                                    </option>#}
+{#                                                {% endfor %}#}
+                                            </select>
+                                            <button type="submit" class="btn btn-sm btn-primary mt-2">Assigner</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                     <form action="{{ path('app_logout') }}" method="post">
                         <button type="submit" class="btn btn-danger">Logout</button>
                     </form>
@@ -72,6 +112,7 @@
             </div>
         </div>
     </div>
+    {{ include('home/partials/footer.html.twig') }}
 {% endblock %}
 
 

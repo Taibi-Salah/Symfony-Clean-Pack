@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tableau de Bord{% endblock %}
+{% block title %}TR | Tableau de Bord{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -22,7 +22,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">En Cours</h5>
-                        <h2 class="card-text" id="inProgressTickets">{{ inProgressTickets }}</h2>
+{#                        <h2 class="card-text" id="inProgressTickets">{{ inProgressTickets }}</h2>#}
                     </div>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Résolus Aujourd'hui</h5>
-                        <h2 class="card-text" id="resolvedToday">{{ resolvedToday }}</h2>
+{#                        <h2 class="card-text" id="resolvedToday">{{ resolvedToday }}</h2>#}
                     </div>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Temps Moyen de Résolution</h5>
-                        <h2 class="card-text" id="avgResolutionTime">{{ avgResolutionTime }} h</h2>
+{#                        <h2 class="card-text" id="avgResolutionTime">{{ avgResolutionTime }} h</h2>#}
                     </div>
                 </div>
             </div>
@@ -50,9 +50,9 @@
                     <div class="card-body">
                         <h5 class="card-title">Tickets Récents</h5>
                         <ul class="list-group" id="recentTickets">
-                            {% for ticket in recentTickets %}
-                                <li class="list-group-item">{{ ticket.title }} - {{ ticket.dateEnd|date("d/m/Y") }}</li>
-                            {% endfor %}
+{#                            {% for ticket in recentTickets %}#}
+{#                                <li class="list-group-item">{{ ticket.title }} - {{ ticket.dateEnd|date("d/m/Y") }}</li>#}
+{#                            {% endfor %}#}
                         </ul>
                     </div>
                 </div>
@@ -88,23 +88,23 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for ticket in tickets %}
-                                    <tr>
-                                        <td>{{ ticket.id }}</td>
-                                        <td>{{ ticket.description }}</td>
-                                        <td>{{ ticket.dateStart|date('d/m/Y H:i') }}</td>
-                                        <td>{{ ticket.dateEnd|date('d/m/Y H:i') }}</td>
-                                        <td>
-                                            <span class="badge bg-{{ ticket.status == 'open' ? 'danger' : (ticket.status == 'in_progress' ? 'warning' : 'success') }}">
-                                                {{ ticket.status }}
-                                            </span>
-                                        </td>
-                                        <td>{{ ticket.technician ? ticket.technician.name : 'Non assigné' }}</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-primary" onclick="editTicket({{ ticket.id }})">Éditer</button>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
+{#                                {% for ticket in tickets %}#}
+{#                                    <tr>#}
+{#                                        <td>{{ ticket.id }}</td>#}
+{#                                        <td>{{ ticket.description }}</td>#}
+{#                                        <td>{{ ticket.dateStart|date('d/m/Y H:i') }}</td>#}
+{#                                        <td>{{ ticket.dateEnd|date('d/m/Y H:i') }}</td>#}
+{#                                        <td>#}
+{#                                            <span class="badge bg-{{ ticket.status == 'open' ? 'danger' : (ticket.status == 'in_progress' ? 'warning' : 'success') }}">#}
+{#                                                {{ ticket.status }}#}
+{#                                            </span>#}
+{#                                        </td>#}
+{#                                        <td>{{ ticket.technician ? ticket.technician.name : 'Non assigné' }}</td>#}
+{#                                        <td>#}
+{#                                            <button class="btn btn-sm btn-primary" onclick="editTicket({{ ticket.id }})">Éditer</button>#}
+{#                                        </td>#}
+{#                                    </tr>#}
+{#                                {% endfor %}#}
                             </tbody>
                         </table>
                     </div>
@@ -144,9 +144,9 @@
                                 <label for="ticketAssignedTo" class="form-label">Assigné à</label>
                                 <select class="form-select" id="ticketAssignedTo" required>
                                     <option value="">Choisir un technicien</option>
-                                    {% for technician in technicians %}
-                                        <option value="{{ technician.id }}">{{ technician.name }}</option>
-                                    {% endfor %}
+{#                                    {% for technician in technicians %}#}
+{#                                        <option value="{{ technician.id }}">{{ technician.name }}</option>#}
+{#                                    {% endfor %}#}
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -161,48 +161,50 @@
             </div>
         </div>
     </div>
+
+    {{ include('home/partials/footer.html.twig') }}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Graphique circulaire pour les statistiques des tickets
-            var ctx = document.getElementById('ticketStats').getContext('2d');
-            var myChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['En Cours', 'Résolus'],
-                    datasets: [{
-                        data: [{{ inProgressTickets }}, {{ resolvedToday }}],
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.8)',
-                            'rgba(54, 162, 235, 0.8)',
-                            'rgba(75, 192, 192, 0.8)'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    legend: {
-                        position: 'bottom',
-                    },
-                    title: {
-                        display: true,
-                        text: 'Répartition des Tickets'
-                    }
-                }
-            });
+{#    <script>#}
+{#        document.addEventListener('DOMContentLoaded', function() {#}
+{#            // Graphique circulaire pour les statistiques des tickets#}
+{#            var ctx = document.getElementById('ticketStats').getContext('2d');#}
+{#            var myChart = new Chart(ctx, {#}
+{#                type: 'doughnut',#}
+{#                data: {#}
+{#                    labels: ['En Cours', 'Résolus'],#}
+{#                    datasets: [{#}
+{#                        data: [{{ inProgressTickets }}, {{ resolvedToday }}],#}
+{#                        backgroundColor: [#}
+{#                            'rgba(255, 99, 132, 0.8)',#}
+{#                            'rgba(54, 162, 235, 0.8)',#}
+{#                            'rgba(75, 192, 192, 0.8)'#}
+{#                        ]#}
+{#                    }]#}
+{#                },#}
+{#                options: {#}
+{#                    responsive: true,#}
+{#                    legend: {#}
+{#                        position: 'bottom',#}
+{#                    },#}
+{#                    title: {#}
+{#                        display: true,#}
+{#                        text: 'Répartition des Tickets'#}
+{#                    }#}
+{#                }#}
+{#            });#}
 
-            // Simulation de mise à jour en temps réel
-            setInterval(function() {
-                document.getElementById('inProgressTickets').textContent = Math.floor(Math.random() * 30);
-                document.getElementById('resolvedToday').textContent = Math.floor(Math.random() * 20);
-                document.getElementById('avgResolutionTime').textContent = (Math.random() * 24).toFixed(1) + ' h';
-            }, 5000);
-        });
-    </script>
+{#            // Simulation de mise à jour en temps réel#}
+{#            setInterval(function() {#}
+{#                document.getElementById('inProgressTickets').textContent = Math.floor(Math.random() * 30);#}
+{#                document.getElementById('resolvedToday').textContent = Math.floor(Math.random() * 20);#}
+{#                document.getElementById('avgResolutionTime').textContent = (Math.random() * 24).toFixed(1) + ' h';#}
+{#            }, 5000);#}
+{#        });#}
+{#    </script>#}
 {% endblock %}
 
 

@@ -1,9 +1,11 @@
 {# templates/home/connexion/connexion.html.twig #}
 {% extends 'base.html.twig' %}
 
+{% block title %}TR | Connexion{% endblock %}
+
 {% block body %}
     <title>Connectez-vous</title>
-    <body> 
+    <body>
         {{ include('home/partials/header.html.twig') }}
         <section id="hero" class="section form">
             <div class="d-flex justify-content-center">
@@ -18,7 +20,7 @@
                             <label for="inputPassword">Mot de passe</label>
                             <input type="password" name="_password" id="inputPassword" class="form-control" placeholder="Votre mot de passe" required>
                         </div>
-                        
+
                         <div class="col-12 d-flex justify-content-center">
                             <button type="submit" class="btn btn-primary">Se connecter</button>
                         </div>
@@ -31,7 +33,7 @@
                     <div class="error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                 {% endif %}
                 <p class="text-center">Vous n'avez pas de compte ? <a href="{{ path('app_inscription') }}">Inscrivez-vous</a></p>
-            </div><!-- End Contact Form -->
+            </div>
             
         </section>
       

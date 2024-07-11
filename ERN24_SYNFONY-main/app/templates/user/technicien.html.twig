@@ -1,9 +1,13 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}TR | Gestion des Tickets{% endblock %}
+
 {% block body %}
     {{ include('home/partials/header.html.twig') }}
-    <title>Gestion des Tickets</title>
+
     <div class="container">
+
+        <!-- Ticket form -->
         <div class="card">
             <div class="card-header">
                 <h1 class="text-center">Gestion des Tickets</h1>
@@ -27,6 +31,7 @@
             </div>
         </div>
 
+        <!-- Pending tickets -->
         <div class="card mt-4">
             <div class="card-header">
                 <h2 class="text-center">Tickets en cours</h2>
@@ -61,6 +66,8 @@
                 </table>
             </div>
         </div>
+
+        <!-- Closed tickets -->
         <div class="card mt-4">
             <div class="card-header">
                 <h2>Historique des Tickets Clôturés</h2>
@@ -90,6 +97,8 @@
                 </table>
             </div>
         </div>
+
     </div>
+
     {{ include('home/partials/footer.html.twig') }}
 {% endblock %}
