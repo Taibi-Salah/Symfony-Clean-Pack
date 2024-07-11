@@ -119,7 +119,7 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $ticket->setUser($this->getUser());
-            $ticket->setStatus('open'); // Set the default status
+            $ticket->setStatus('ouvert'); // Set the default status
 
             $this->entityManager->persist($ticket);
             $this->entityManager->flush();
@@ -131,11 +131,16 @@ class UserController extends AbstractController
         // Filter tickets by the current user
         $tickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'user' => $this->getUser(),
-            'status' => 'open'
+            'status' => 'ouvert'
+        ]);
+      
+        $tickets = $this->entityManager->getRepository(Ticket::class)->findBy([
+            'user' => $this->getUser(),
+            'status' => 'en cours'
         ]);
         $closedTickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'user' => $this->getUser(),
-            'status' => 'closed'
+            'status' => 'resolus'
         ]);
 
         return $this->render('user/ticket.html.twig', [
