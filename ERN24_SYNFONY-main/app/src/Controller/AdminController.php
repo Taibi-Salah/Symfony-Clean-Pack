@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Stock;
+use App\Entity\Ticket;
 use App\Entity\Intervention;
 use App\Repository\UserRepository;
 use App\Repository\TicketRepository;
@@ -101,8 +102,8 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('app_dashboardl');
     }
 
-        /**
-     * Méthode pour supprimer un utilisateur (fournisseur) sans supprimer les stocks associés
+ /**
+     * Méthode pour supprimer un utilisateur (fournisseur ou technicien)
      * 
      * @Route("/admin/deleteUser/{id}", name="app_deleteuser")
      */
@@ -110,38 +111,52 @@ class AdminController extends AbstractController
     public function deleteUser(User $user): Response
     {
         try {
-            // Commencer une transaction
             $this->entityManager->beginTransaction();
 
-            // Récupérer tous les stocks associés à ce fournisseur
-            $stocks = $this->entityManager->getRepository(Stock::class)->findBy(['supplier' => $user]);
-
-            // Mettre à NULL la référence au fournisseur pour chaque stock
-            foreach ($stocks as $stock) {
-                $stock->setSupplier(null);
-                $this->entityManager->persist($stock);
+            if (in_array('ROLE_SUPPLIER', $user->getRoles())) {
+                $this->handleSupplierDeletion($user);
+            } elseif (in_array('ROLE_TECHNICIAN', $user->getRoles())) {
+                $this->handleTechnicianDeletion($user);
             }
 
-            // Supprimer l'utilisateur (fournisseur)
-            $this->entityManager->remove($user);
+            // Supprimer les informations de contact
+            $contactInfo = $user->getContactInformation();
+            if ($contactInfo) {
+                $this->entityManager->remove($contactInfo);
+            }
 
-            // Appliquer les changements
+            // Supprimer l'utilisateur
+            $this->entityManager->remove($user);
             $this->entityManager->flush();
 
-            // Valider la transaction
             $this->entityManager->commit();
 
-            $this->addFlash('success', 'Fournisseur supprimé avec succès. Les stocks associés ont été conservés.');
+            $this->addFlash('success', 'Utilisateur et ses informations de contact supprimés avec succès.');
         } catch (\Exception $e) {
-            // En cas d'erreur, annuler la transaction
             $this->entityManager->rollback();
             $this->addFlash('error', 'Erreur lors de la suppression : ' . $e->getMessage());
         }
 
-        return $this->redirectToRoute('admin');
+        return $this->redirectToRoute('app_deleteuser' );
     }
 
-}
+    private function handleSupplierDeletion(User $supplier)
+    {
+        $stocks = $this->entityManager->getRepository(Stock::class)->findBy(['supplier' => $supplier]);
+        foreach ($stocks as $stock) {
+            $stock->setSupplier(null);
+            $this->entityManager->persist($stock);
+        }
+    }
+
+    private function handleTechnicianDeletion(User $technician)
+    {
+        $tickets = $this->entityManager->getRepository(Ticket::class)->findBy(['technician' => $technician]);
+        foreach ($tickets as $ticket) {
+            $ticket->setTechnician(null);
+            $this->entityManager->persist($ticket);
+        }
+    }}
 
 
 
