@@ -19,7 +19,7 @@ class DashboardController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/dashboard', name: 'app_dashboard')]
+    #[Route('/dashboard', name: 'app_dashboardl')]
     public function index(): Response
     {
         // Fetch data from the database
@@ -32,7 +32,6 @@ class DashboardController extends AbstractController
 
         // Fetch all tickets
         $tickets = $this->entityManager->getRepository(Ticket::class)->findinfos();
-
 
         // Fetch technicians
         $technicians = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TECHNICIEN');

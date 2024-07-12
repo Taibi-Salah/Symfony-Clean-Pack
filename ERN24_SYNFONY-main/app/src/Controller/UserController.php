@@ -73,11 +73,6 @@ class UserController extends AbstractController
     //     // You can add logic here to fetch data or perform actions needed for the dashboard
     //     return $this->render('home/dashboard.html.twig');
 
-    #[Route('/dashboard', name: 'app_dashboard')]
-    public function dashboard(): Response
-    {
-        return $this->render('home/dashboard.html.twig');
-    }
 
 
     #[Route('/inscription', name: 'app_inscription')]
@@ -116,9 +111,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $ticket->setUser($this->getUser());
 
-            $ticket->setStatus('ouvert'); // Set the default status
-
-            $ticket->setStatus('open');
+            $ticket->setStatus('ouvert'); // Set the default status  
 
 
             $this->entityManager->persist($ticket);
@@ -136,8 +129,6 @@ class UserController extends AbstractController
         $tickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'user' => $this->getUser(),
             'status' => 'en cours'
-
-            'status' => ['open', 'paid']
 
         ]);
         $closedTickets = $this->entityManager->getRepository(Ticket::class)->findBy([
@@ -163,11 +154,11 @@ class UserController extends AbstractController
         $technicien = $this->getUser();
         $tickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'technicien' => $technicien,
-            'status' => 'open'
+            'status' => 'ouvert'
         ]);
         $closedTickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'technicien' => $technicien,
-            'status' => 'closed'
+            'status' => 'resolus'
         ]);
 
         return $this->render('user/technicien.html.twig', [
