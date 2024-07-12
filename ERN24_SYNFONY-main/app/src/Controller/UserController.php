@@ -67,18 +67,6 @@ class UserController extends AbstractController
     }
 
 
-    // #[Route('/dashboard', name: 'app_dashboard')]
-    // public function dashboard(): Response
-    // {
-    //     // You can add logic here to fetch data or perform actions needed for the dashboard
-    //     return $this->render('home/dashboard.html.twig');
-
-    #[Route('/dashboard', name: 'app_dashboard')]
-    public function dashboard(): Response
-    {
-        return $this->render('home/dashboard.html.twig');
-    }
-
 
     #[Route('/inscription', name: 'app_inscription')]
     public function register(Request $request, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator): Response
@@ -118,9 +106,6 @@ class UserController extends AbstractController
 
             $ticket->setStatus('ouvert'); // Set the default status
 
-            $ticket->setStatus('open');
-
-
             $this->entityManager->persist($ticket);
             $this->entityManager->flush();
 
@@ -136,8 +121,6 @@ class UserController extends AbstractController
         $tickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'user' => $this->getUser(),
             'status' => 'en cours'
-
-            'status' => ['open', 'paid']
 
         ]);
         $closedTickets = $this->entityManager->getRepository(Ticket::class)->findBy([

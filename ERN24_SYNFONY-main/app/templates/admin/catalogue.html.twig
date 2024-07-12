@@ -17,33 +17,27 @@
                     <thead>
                         <tr>
                             <th scope="col">Nom</th>
-                            <th scope="col">Description</th>
                             <th scope="col">Numéro de référence</th>
                             <th scope="col">Quantité</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {# {% for part in parts %} #}
+                         {% for stock in stock %} 
                             <tr>
-                                <td> part.name </td>
-                                <td> part.description </td>
-                                <td> part.referenceNumber </td>
-                                <td> part.quantity </td>
+                                <td> {{stock.label}} </td>
+                                <td> {{stock.referenceNb }}</td>
+                                <td> {{stock.quantity }}</td>
                                 <td>
-                                <a href="{{ path('app_editpiece') }}" class="btn btn-warning btn-sm">Modifier</a>
-                                    <form method="post" action="#" style="display:inline-block;">
-                                        <input type="hidden" name="_token" value="#">
-                                        <button class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous vraiment supprimer cette pièce ?')">Supprimer</button>
-                                        <a href="">
-                                    </form>
+                                <a href="{{ path('app_editpiece', {'id': stock.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                                <a href="{{ path('app_deletepiece', {'id': stock.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous vraiment supprimer cette pièce?')">Supprimer</a>
                                 </td>
                             </tr>
-                        {# {% else %} #}
+                         {% else %} 
                             <tr>
                                 <td colspan="5" class="text-center">Aucune pièce disponible</td>
                             </tr>
-                        {# {% endfor %} #}
+                         {% endfor %} 
                     </tbody>
                 </table>
             </div>
