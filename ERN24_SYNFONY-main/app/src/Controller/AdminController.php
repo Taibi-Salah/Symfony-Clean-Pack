@@ -137,7 +137,7 @@ class AdminController extends AbstractController
             $this->addFlash('error', 'Erreur lors de la suppression : ' . $e->getMessage());
         }
 
-        return $this->redirectToRoute('app_deleteuser' );
+        return $this->redirectToRoute('app_dashboard' );
     }
 
     private function handleSupplierDeletion(User $supplier)
