@@ -19,7 +19,7 @@ class DashboardController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/dashboard', name: 'app_dashboard')]
+    #[Route('/dashboard', name: 'app_dashboardl')]
     public function index(): Response
     {
         // Fetch data from the database
@@ -28,18 +28,15 @@ class DashboardController extends AbstractController
         $resolvedToday = $this->entityManager->getRepository(Ticket::class)->count(['status' => 'resolus']);
         $avgResolutionTime = $this->entityManager->getRepository(Ticket::class)->calculateAverageResolutionTime();
         $recentTickets = $this->entityManager->getRepository(Ticket::class)->findRecentTickets();
+ 
 
         // Fetch all tickets
         $tickets = $this->entityManager->getRepository(Ticket::class)->findinfos();
-        // Fetch technicians
-<<<<<<< HEAD
-        $technicians = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TECHNICIAN');
 
-=======
+        // Fetch technicians
         $technicians = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TECHNICIEN');
       
  
->>>>>>> 23bf654 (ticket+nom ok)
         // Combine data into an array
         $data = [
             'openTickets' => $openTickets,
@@ -51,10 +48,16 @@ class DashboardController extends AbstractController
             'technicians' => $technicians,
            
         ];
- 
+        //  render view;
         return $this->render('home/dashboard.html.twig', $data);
     }
  }
+
+
+
+
+
+
 
 
 

@@ -28,8 +28,8 @@ class TicketType extends AbstractType
             ])
             ->add('status', ChoiceType::class, [
                 'choices' => [
-                    'Open' => 'open',
-                    'Closed' => 'closed',
+                    'Open' => 'ouvert',
+                    'Closed' => 'resolus',
                 ],
                 'label' => 'Statut',
             ]);
@@ -42,6 +42,8 @@ class TicketType extends AbstractType
         ]);
     }
 }
+
+
 
 
 

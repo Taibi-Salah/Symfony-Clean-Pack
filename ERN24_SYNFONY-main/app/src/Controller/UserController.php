@@ -67,6 +67,13 @@ class UserController extends AbstractController
     }
 
 
+    // #[Route('/dashboard', name: 'app_dashboard')]
+    // public function dashboard(): Response
+    // {
+    //     // You can add logic here to fetch data or perform actions needed for the dashboard
+    //     return $this->render('home/dashboard.html.twig');
+
+
 
     #[Route('/inscription', name: 'app_inscription')]
     public function register(Request $request, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator): Response
@@ -103,7 +110,9 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $ticket->setUser($this->getUser());
-            $ticket->setStatus('open');
+
+            $ticket->setStatus('ouvert'); // Set the default status  
+
 
             $this->entityManager->persist($ticket);
             $this->entityManager->flush();
@@ -113,7 +122,14 @@ class UserController extends AbstractController
 
         $tickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'user' => $this->getUser(),
-            'status' => ['open', 'paid']
+
+            'status' => 'ouvert'
+        ]);
+      
+        $tickets = $this->entityManager->getRepository(Ticket::class)->findBy([
+            'user' => $this->getUser(),
+            'status' => 'en cours'
+
         ]);
         $closedTickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'user' => $this->getUser(),
@@ -138,11 +154,11 @@ class UserController extends AbstractController
         $technicien = $this->getUser();
         $tickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'technicien' => $technicien,
-            'status' => 'open'
+            'status' => 'ouvert'
         ]);
         $closedTickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'technicien' => $technicien,
-            'status' => 'closed'
+            'status' => 'resolus'
         ]);
 
         return $this->render('user/technicien.html.twig', [
@@ -217,6 +233,20 @@ class UserController extends AbstractController
         );
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

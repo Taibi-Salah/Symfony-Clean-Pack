@@ -14,245 +14,6 @@
 {% endblock %}
 
 {% block body %}
-<<<<<<< HEAD
-    {{ include('home/partials/header.html.twig') }}
-<div class="container mt-4">
-    <h1 class="mb-4 text-center">Tableau de Bord</h1>
-    <div class="row">
-        <div class="col-md-3 mb-3">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Tickets Ouverts</h5>
-                    <h2 class="card-text text-primary" id="openTickets">{{ openTickets }}</h2>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Tickets Récents</h5>
-                        <ul class="list-group" id="recentTickets">
-                            {% for ticket in recentTickets %}
-                                <li class="list-group-item">{{ ticket.title }} - {{ ticket.dateEnd|date("d/m/Y") }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Résolus Aujourd'hui</h5>
-                    <h2 class="card-text text-success" id="resolvedToday">{{ resolvedToday }}</h2>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Temps Moyen de Résolution</h5>
-                    <h2 class="card-text text-info" id="avgResolutionTime">{{ avgResolutionTime }} h</h2>
-                </div>
-            </div>
-        </div>
-    </div>
- 
-    <div class="row mt-4">
-        <div class="col-md-6 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-header bg-light">
-                    <h5 class="card-title mb-0">Tickets Récents</h5>
-                </div>
-                <div class="card-body">
-                    <ul class="list-group list-group-flush" id="recentTickets">
-                        {% for ticket in recentTickets %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                               N° {{ ticket.id }}-
-                                {{ ticket.description() }}
-                                <span class="badge bg-secondary rounded-pill">{{ ticket.dateEnd|date("d/m/Y") }}</span>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-header bg-light">
-                    <h5 class="card-title mb-0">Statistiques des Tickets</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="ticketStats"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<<<<<<< HEAD
-        <div class="container mt-4">
-            <h1 class="mb-4">Gestion des Tickets</h1>
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="card">
-                        <div class="card-header">Liste des Tickets</div>
-                        <div class="card-body ticket-list">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-<<<<<<< HEAD
-                                        <td>{{ ticket.id }}</td>
-                                        <td>{{ ticket.description }}</td>
-                                        <td>{{ ticket.dateStart|date('d/m/Y H:i') }}</td>
-                                        <td>{{ ticket.dateEnd|date('d/m/Y H:i') }}</td>
-                                        <td>
-                                            <span class="badge bg-{{ ticket.status == 'open' ? 'danger' : (ticket.status == 'in_progress' ? 'warning' : 'success') }}">
-                                                {{ ticket.status }}
-                                            </span>
-                                        </td>
-                                        <td>{{ ticket.technician ? ticket.technician.name : 'Non assigné' }}</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-primary" onclick="editTicket({{ ticket.id }})">Éditer</button>
-                                        </td>
-=======
-                                        <th>ID</th>
-                                        <th>Description</th>
-                                        <th>Date de Début</th>
-                                        <th>Date de Fin</th>
-                                        <th>Statut</th>
-                                        <th>Assigné à</th>
-                                        <th>Actions</th>
->>>>>>> 6491e8b (tableau de bord fonctionnel)
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for ticket in tickets %}
-                                        <tr>
-                                            <td>{{ ticket.id }}</td>
-                                            <td>{{ ticket.description }}</td>
-                                            <td>{{ ticket.dateStart|date('d/m/Y H:i') }}</td>
-                                            <td>{{ ticket.dateEnd|date('d/m/Y H:i') }}</td>
-                                            <td>
-                                                <span class="badge bg-{{ ticket.status == 'open' ? 'danger' : (ticket.status == 'in_progress' ? 'warning' : 'success') }}">
-                                                    {{ ticket.status }}
-                                                </span>
-                                            </td>
-                                            <td>{{ ticket.technicien ? ticket.technicien.email : 'Non assigné' }}</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary" onclick="editTicket({{ ticket.id }})">Éditer</button>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-header">Détails du Ticket</div>
-                        <div class="card-body">
-                            <form id="ticketForm">
-                                <input type="hidden" id="ticketId">
-                                <div class="mb-3">
-                                    <label for="ticketTitle" class="form-label">Titre</label>
-                                    <input type="text" class="form-control" id="ticketTitle" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="ticketClientName" class="form-label">Nom du client</label>
-                                    <input type="text" class="form-control" id="ticketClientName" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="ticketClientAddress" class="form-label">Adresse du client</label>
-                                    <input type="text" class="form-control" id="ticketClientAddress" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="ticketClientPhone" class="form-label">Téléphone du client</label>
-                                    <input type="text" class="form-control" id="ticketClientPhone" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="ticketStatus" class="form-label">Statut</label>
-                                    <select class="form-select" id="ticketStatus" required>
-                                        <option value="open">Ouvert</option>
-                                        <option value="in_progress">En cours</option>
-                                        <option value="resolved">Résolu</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="ticketAssignedTo" class="form-label">Assigné à</label>
-                                    <select class="form-select" id="ticketAssignedTo" required>
-                                        <option value="">Choisir un technicien</option>
-                                        {% for technician in technicians %}
-                                            <option value="{{ technician.id }}">{{ technician.name }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="ticketDescription" class="form-label">Description</label>
-                                    <textarea class="form-control" id="ticketDescription" rows="3"></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Sauvegarder</button>
-                            </form>
-                        </div>
-                    </div>
-                    <a href="/">
-                        <button type="button" class="btn btn-primary">Retour</button>
-                    </a>
-                </div>
-            </div>
-        </div>
-=======
-<div class="container mt-4">
-    <h1 class="mb-4">Gestion des Tickets</h1>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-header">Liste des Tickets</div>
-<div class="card-body ticket-list">
-    <div class="table-responsive">
-        <table class="table table-hover table-sm">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Adresse</th>
-                    <th>Téléphone</th>
-                    <th>Description</th>
-                    <th>Date de Début</th>
-                    <th>Date de Fin</th>
-                    <th>Statut</th>
-                    <th>Assigné à</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for ticket in tickets %}
-                    <tr>
-                        <td>{{ ticket.id }}</td>
-                        <td>{{ ticket.user ? ticket.user.contactInformation.last_name : 'N/A' }}</td>
-                        <td>{{ ticket.user ? ticket.user.contactInformation.address : 'N/A' }}</td>
-                        <td>{{ ticket.user ? ticket.user.contactInformation.phone : 'N/A' }}</td>
-                        <td>{{ ticket.description }}</td>
-                        <td>{{ ticket.dateStart|date('d/m/Y H:i') }}</td>
-                        <td>{{ ticket.dateEnd|date('d/m/Y H:i') }}</td>
-                        <td>
-                            <span class="badge bg-{{ ticket.status == 'resolus' ? 'danger' : (ticket.status == 'en cours' ? 'warning' : 'success') }}">
-                                {{ ticket.status }}
-                            </span>
-                        </td>
-                        <td>{{ ticket.technicien ? ticket.technicien.email : 'Non assigné' }}</td>
-                        <td>
-                            <button class="btn btn-sm btn-danger" onclick="deleteTicket({{ ticket.id }})">supprimer</button>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-=======
 	{{ include('home/partials/header.html.twig') }}
 	<div class="container mt-4">
 		<h1 class="mb-4 text-center">Tableau de Bord</h1>
@@ -291,7 +52,6 @@
 				</div>
 			</div>
 		</div>
->>>>>>> 23bf654 (ticket+nom ok)
 
 		<div class="row mt-4">
 			<div class="col-md-6 mb-4">
@@ -303,8 +63,7 @@
 						<ul class="list-group list-group-flush" id="recentTickets">
 							{% for ticket in recentTickets %}
 								<li class="list-group-item d-flex justify-content-between align-items-center">
-									N°
-									{{ ticket.id }}-
+									N°{{ ticket.id }}-
 									{{ ticket.description() }}
 									<span class="badge bg-secondary rounded-pill">{{ ticket.dateEnd|date("d/m/Y") }}</span>
 								</li>
@@ -381,7 +140,15 @@
 													{{ ticket.status }}
 												</span>
 											</td>
-											<td>{{ ticket.technicien ? ticket.technicien.email : 'Non assigné' }}</td>
+											<td>
+												{{ ticket.technicien ? 
+														(ticket.technicien.contactInformation ? 
+															ticket.technicien.contactInformation.lastName ~ ' ' ~ 
+															ticket.technicien.contactInformation.firstName ~ 
+															' ' 
+														: ticket.technicien.email) 
+													: 'Non assigné' }}
+											</td>
 											<td>
 												<button class="btn btn-sm btn-danger" onclick="deleteTicket({{ ticket.id }})">supprimer</button>
 											</td>
@@ -396,7 +163,7 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th>ID</th>
+
 								<th>Nom</th>
 								<th>Adresse</th>
 								<th>Téléphone</th>
@@ -405,6 +172,7 @@
 								<th>Date de Fin</th>
 								<th>Statut</th>
 								<th>Assigné à</th>
+								<th>Intervention</th>
 								<th>Actions</th>
 							</tr>
 						</thead>
@@ -471,61 +239,6 @@
 							{% endfor %}
 						</tbody>
 					</table>
-
-
-<<<<<<< HEAD
-    </div>
-</div>
-      
->>>>>>> 454031c (gestion vide)
-    {% endblock %}
- 
-        {% block javascripts %}
-            {{ parent() }}
- 
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
-            <script>
-                document.addEventListener('DOMContentLoaded', function () { // Graphique circulaire pour les statistiques des tickets
-    var ctx = document.getElementById('ticketStats').getContext('2d');
-    var myChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-    labels: [
-    'Ouverts', 'En Cours', 'Résolus'
-    ],
-    datasets: [
-    {
-    data: [
-    {{ openTickets }}, {{ inProgressTickets }}, {{ resolvedToday }}
-    ],
-    backgroundColor: ['rgba(75, 192, 192, 0.8)', '#ffc107', 'rgba(255, 99, 132, 0.8)']
-    }
-    ]
-    },
-    options: {
-    responsive: true,
-    legend: {
-    position: 'bottom'
-    },
-    title: {
-    display: true,
-    text: 'Répartition des Tickets'
-    }
-    }
-    });
- 
-    // Simulation de mise à jour en temps réel
-{#     setInterval(function () {
-    document.getElementById('openTickets').textContent = Math.floor(Math.random() * 50);
-    document.getElementById('inProgressTickets').textContent = Math.floor(Math.random() * 30);
-    document.getElementById('resolvedToday').textContent = Math.floor(Math.random() * 20);
-    document.getElementById('avgResolutionTime').textContent = (Math.random() * 24).toFixed(1) + ' h';
-    }, 5000);
- #}    });
-            </script>
-        {% endblock %}
- 
-=======
 				</div>
 			</div>
 
@@ -536,7 +249,8 @@
 
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
 			<script>
-				document.addEventListener('DOMContentLoaded', function () { // Graphique circulaire pour les statistiques des tickets
+				console.log(openTickets, inProgressTickets, resolvedToday);
+document.addEventListener('DOMContentLoaded', function () { // Graphique circulaire pour les statistiques des tickets
 var ctx = document.getElementById('ticketStats').getContext('2d');
 var myChart = new Chart(ctx, {
 type: 'doughnut',
@@ -565,17 +279,6 @@ text: 'Répartition des Tickets'
 }
 });
 
-// Simulation de mise à jour en temps réel
-{
-# setInterval(function () {
-document.getElementById('openTickets').textContent = Math.floor(Math.random() * 50);
-document.getElementById('inProgressTickets').textContent = Math.floor(Math.random() * 30);
-document.getElementById('resolvedToday').textContent = Math.floor(Math.random() * 20);
-document.getElementById('avgResolutionTime').textContent = (Math.random() * 24).toFixed(1) + ' h';
-}, 5000);
-#
-}
 });
 			</script>
 		{% endblock %}
->>>>>>> 23bf654 (ticket+nom ok)
