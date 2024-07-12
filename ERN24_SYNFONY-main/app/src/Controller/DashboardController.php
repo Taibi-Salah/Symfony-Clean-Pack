@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\ContactInformation;
 use App\Entity\Ticket;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,29 +23,36 @@ class DashboardController extends AbstractController
     public function index(): Response
     {
         // Fetch data from the database
-        $inProgressTickets = $this->entityManager->getRepository(Ticket::class)->count(['status' => 'in_progress']);
-        $resolvedToday = $this->entityManager->getRepository(Ticket::class)->countResolvedToday();
+        $openTickets = $this->entityManager->getRepository(Ticket::class)->count(['status' => 'ouvert']);
+        $inProgressTickets = $this->entityManager->getRepository(Ticket::class)->count(['status' => 'en cours']);
+        $resolvedToday = $this->entityManager->getRepository(Ticket::class)->count(['status' => 'resolus']);
         $avgResolutionTime = $this->entityManager->getRepository(Ticket::class)->calculateAverageResolutionTime();
         $recentTickets = $this->entityManager->getRepository(Ticket::class)->findRecentTickets();
+ 
 
         // Fetch all tickets
-        $tickets = $this->entityManager->getRepository(Ticket::class)->findAll();
-        // Fetch technicians
-        $technicians = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TECHNICIAN');
+        $tickets = $this->entityManager->getRepository(Ticket::class)->findinfos();
 
+
+        // Fetch technicians
+        $technicians = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TECHNICIEN');
+      
+ 
         // Combine data into an array
         $data = [
+            'openTickets' => $openTickets,
             'inProgressTickets' => $inProgressTickets,
             'resolvedToday' => $resolvedToday,
             'avgResolutionTime' => $avgResolutionTime,
             'recentTickets' => $recentTickets,
             'tickets' => $tickets,
             'technicians' => $technicians,
+           
         ];
-
+        //  render view;
         return $this->render('home/dashboard.html.twig', $data);
     }
-}
+ }
 
 
 

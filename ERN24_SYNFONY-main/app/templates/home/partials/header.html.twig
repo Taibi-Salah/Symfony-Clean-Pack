@@ -20,6 +20,9 @@
 
 					{% if is_granted('ROLE_ADMIN') %}
 						<li>
+							<a href="/admin">Fournisseurs</a>
+						</li>
+						<li>
 							<a href="/technicien">Techniciens</a>
 						</li>
 						<li>
@@ -28,9 +31,7 @@
 						<li>
 							<a href="/dashboard">Tableau de bord</a>
 						</li>
-						<li>
-							<a href="/mytickets">Tickets</a>
-						</li>
+					
 						<li class="dropdown">
 							<a href="#">
 								<span>Menu</span>
@@ -56,9 +57,11 @@
 							<a href="/reports">Rapports</a>
 						</li>
 					{% else %}
+          		{% if app.user %}
 						<li>
 							<a href="/mytickets">Tickets</a>
 						</li>
+            	{% endif %}
 						<li class="dropdown">
 							<a href="#">
 								<span>Menu</span>
