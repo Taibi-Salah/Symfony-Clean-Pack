@@ -65,7 +65,7 @@ class UserController extends AbstractController
             'error' => $error,
         ]);
     }
-
+     
 
 
     #[Route('/inscription', name: 'app_inscription')]
@@ -103,6 +103,7 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $ticket->setUser($this->getUser());
+
 
             $ticket->setStatus('ouvert'); // Set the default status
 
@@ -146,11 +147,11 @@ class UserController extends AbstractController
         $technicien = $this->getUser();
         $tickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'technicien' => $technicien,
-            'status' => 'open'
+            'status' => 'ouvert'
         ]);
         $closedTickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'technicien' => $technicien,
-            'status' => 'closed'
+            'status' => 'resolus'
         ]);
 
         return $this->render('user/technicien.html.twig', [
@@ -225,6 +226,20 @@ class UserController extends AbstractController
         );
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

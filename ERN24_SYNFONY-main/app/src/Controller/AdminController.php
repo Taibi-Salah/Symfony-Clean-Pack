@@ -148,9 +148,16 @@ class AdminController extends AbstractController
             }
         }
 
-        return $this->redirectToRoute('admin_dashboard');
+        return $this->redirectToRoute('app_dashboardl');
     }
 }
+
+
+
+
+
+
+
 
 
 

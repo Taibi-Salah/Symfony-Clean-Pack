@@ -279,15 +279,6 @@ text: 'Répartition des Tickets'
 }
 });
 
-
-// Simulation de mise à jour en temps réel
-
-setInterval(function () {
-{# document.getElementById('openTickets').textContent = Math.floor(Math.random() * 50);
-document.getElementById('inProgressTickets').textContent = Math.floor(Math.random() * 30);
-document.getElementById('resolvedToday').textContent = Math.floor(Math.random() * 20); #}
-document.getElementById('avgResolutionTime').textContent = (Math.random() * 24).toFixed(1) + ' h';
-}, 5000);
 });
 			</script>
 		{% endblock %}
