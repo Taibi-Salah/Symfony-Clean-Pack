@@ -1,5 +1,5 @@
 <h1>Pour lancer le Projet</h1>
-<h2>Allez sur le dossier RUNNER<2>
+<h2>Allez sur le dossier RUNNER<h2>
 
 
   
