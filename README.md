@@ -1,3 +1,13 @@
+1- Cloner le projet grâce au git clone 
+2- Ouvrir le dossier dans un IDE, Ouvrir un terminal dans l'IDE
+3- Ouvrir un terminal et se positionner sur le dossier ERN24_SYMFONY-main
+4- Faire la commande docker compose up --build (pour construire le container)
+5- docker exec -it phpimmo composer install (installer le dossier vendor, Appuyer sur n quand il vous demander une autre recette docker)
+6- Se connecter à la bdd graĉe au données sur docker-compose.yml
+7- docker exec -it phpimmo bin/console d:m:m
+8- docker exec -it phpimmo bin/console d:f:l 
+
+
 Se connecter a sa BRANCH
 
 git checkout -b feature-login
