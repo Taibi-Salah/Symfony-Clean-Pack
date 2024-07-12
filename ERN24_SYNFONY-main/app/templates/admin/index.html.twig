@@ -1,34 +1,76 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Admin Dashboard{% endblock %}
-
-{% block body %}
-    <div class="container mt-5">
-        <div class="card">
-            <div class="card-header">
-                <h1>Admin Dashboard</h1>
-            </div>
-            <div class="card-body">
-                {% if app.user %}
-                    <p>Welcome, <strong>{{ app.user.email }}</strong>! You have the following roles: <strong>{{ app.user.roles|join(', ') }}</strong></p>
-                    <a href="{{ path('admin_catalogue')}}" class="btn btn-primary mb-3">Catalogue de pièces</a>
-
-                    <h2>Users</h2>
-                    <ul class="list-group mb-3">
-                        {% for user in users %}
-                            <li class="list-group-item">{{ user.email }} - Roles: {{ user.roles|join(', ') }}</li>
-                        {% endfor %}
-                    </ul>
-                   
-                    <a href="{{ path('app_home') }}" class="btn btn-secondary mt-3">Retour</a>
-                {% else %}
-                    <p>You are not logged in.</p>
-                    <a href="{{ path('app_login') }}" class="btn btn-primary">Login</a>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+{% block title %}Gestion RH et fournisseurs
 {% endblock %}
 
+{% block body %}
+	<div class="container mt-5">
+		<div class="card">
+			<div class="card-header">
+				<h1>Gestion RH et fournisseurs</h1>
+			</div>
+			<div class="card-body">
+				{% if app.user %}
+					<p>Welcome,
+						<strong>{{ app.user.email }}</strong>! You have the following roles:
+						<strong>{{ app.user.roles|join(', ') }}</strong>
+					</p>
+					<a href="{{ path('admin_catalogue')}}" class="btn btn-primary mb-3">Catalogue de pièces</a>
 
+					<h2>Techniciens</h2>
+					<ul class="list-group mb-3">
+						{% for user in users %}
+							{% if 'ROLE_TECHNICIEN' in user.roles %}
+								<li class="list-group-item">
+									{% if user.contactInformation %}
+										<span class="me-3">{{ user.contactInformation.lastName|default('') }}</span>
+										<span class="me-3">{{ user.contactInformation.firstName|default('') }}</span>
+										<span class="me-3">{{ user.contactInformation.phoneNumber|default('') }}</span>
+										<span class="me-3">{{ user.contactInformation.address|default('') }}</span>
+										<span class="me-3">{{ user.contactInformation.city|default('') }}</span>
+									{% else %}
+										<span>
+											{{ user.email }}
+										{% endif %}
+									</li>
+								{% endif %}
+							{% endfor %}
+						</ul>
 
+					
+						<ul class="list-group mb-3">
+							<h2>Fournisseurs</h2>
+<ul class="list-group mb-3">
+    {% for user in users %}
+        {% if 'ROLE_SUPPLIER' in user.roles %}
+            <li class="list-group-item">
+                {% if user.contactInformation %}
+                    <span class="me-2"><strong>{{ user.contactInformation.companyName|default('') }}</strong></span>
+                    <span class="me-2">{{ user.contactInformation.lastName|default('') }}</span>
+                    <span class="me-2">{{ user.contactInformation.firstName|default('') }}</span>
+                    <span class="me-2">{{ user.contactInformation.phoneNumber|default('') }}</span>
+                    <span class="me-2">{{ user.contactInformation.address|default('') }}</span>
+                    <span class="me-2">{{ user.contactInformation.city|default('') }}</span>
+                    <span class="me-2">{{ user.contactInformation.zipCode|default('') }}</span>
+                    {% if user.contactInformation.siretNb %}
+                    
+                        <br><small>SIRET : {{ user.contactInformation.siretNb }}</small>
+                    {% endif %}
+                {% endif %}
+                <br>
+                <small>{{ user.email }}</small>
+            </li>
+        {% endif %}
+    {% endfor %}
+</ul>
+						</ul>
+
+						<a href="{{ path('app_home') }}" class="btn btn-secondary mt-3">Retour</a>
+					{% else %}
+						<p>You are not logged in.</p>
+						<a href="{{ path('app_login') }}" class="btn btn-primary">Login</a>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	{% endblock %}
