@@ -2,15 +2,17 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\User;
+use App\Entity\Stock;
+use App\Entity\Intervention;
+use App\Repository\UserRepository;
+use App\Repository\TicketRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\InterventionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\UserRepository;
-use App\Repository\TicketRepository;
-use App\Repository\InterventionRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Intervention;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AdminController extends AbstractController
 {
@@ -98,6 +100,47 @@ class AdminController extends AbstractController
 
         return $this->redirectToRoute('app_dashboardl');
     }
+
+        /**
+     * Méthode pour supprimer un utilisateur (fournisseur) sans supprimer les stocks associés
+     * 
+     * @Route("/admin/deleteUser/{id}", name="app_deleteuser")
+     */
+    #[Route('/admin/deleteUser/{id}', name: 'app_deleteuser')]
+    public function deleteUser(User $user): Response
+    {
+        try {
+            // Commencer une transaction
+            $this->entityManager->beginTransaction();
+
+            // Récupérer tous les stocks associés à ce fournisseur
+            $stocks = $this->entityManager->getRepository(Stock::class)->findBy(['supplier' => $user]);
+
+            // Mettre à NULL la référence au fournisseur pour chaque stock
+            foreach ($stocks as $stock) {
+                $stock->setSupplier(null);
+                $this->entityManager->persist($stock);
+            }
+
+            // Supprimer l'utilisateur (fournisseur)
+            $this->entityManager->remove($user);
+
+            // Appliquer les changements
+            $this->entityManager->flush();
+
+            // Valider la transaction
+            $this->entityManager->commit();
+
+            $this->addFlash('success', 'Fournisseur supprimé avec succès. Les stocks associés ont été conservés.');
+        } catch (\Exception $e) {
+            // En cas d'erreur, annuler la transaction
+            $this->entityManager->rollback();
+            $this->addFlash('error', 'Erreur lors de la suppression : ' . $e->getMessage());
+        }
+
+        return $this->redirectToRoute('admin');
+    }
+
 }
 
 
