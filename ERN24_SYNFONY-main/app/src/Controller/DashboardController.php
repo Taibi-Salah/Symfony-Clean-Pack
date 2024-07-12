@@ -29,8 +29,11 @@ class DashboardController extends AbstractController
         $avgResolutionTime = $this->entityManager->getRepository(Ticket::class)->calculateAverageResolutionTime();
         $recentTickets = $this->entityManager->getRepository(Ticket::class)->findRecentTickets();
  
+
         // Fetch all tickets
         $tickets = $this->entityManager->getRepository(Ticket::class)->findinfos();
+
+
         // Fetch technicians
         $technicians = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TECHNICIEN');
       
@@ -46,7 +49,7 @@ class DashboardController extends AbstractController
             'technicians' => $technicians,
            
         ];
-//  dd($data);
+        //  render view;
         return $this->render('home/dashboard.html.twig', $data);
     }
  }

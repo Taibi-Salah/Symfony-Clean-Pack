@@ -62,9 +62,8 @@
                         </tbody>
                     </table>
 
-                    <form action="{{ path('app_logout') }}" method="post">
-                        <button type="submit" class="btn btn-danger">Logout</button>
-                    </form>
+                   
+                    <a href="{{ path('app_home') }}" class="btn btn-secondary mt-3">Retour</a>
                 {% else %}
                     <p>You are not logged in.</p>
                     <a href="{{ path('app_login') }}" class="btn btn-primary">Login</a>

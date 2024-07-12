@@ -63,8 +63,7 @@
 						<ul class="list-group list-group-flush" id="recentTickets">
 							{% for ticket in recentTickets %}
 								<li class="list-group-item d-flex justify-content-between align-items-center">
-									N°
-									{{ ticket.id }}-
+									N°{{ ticket.id }}-
 									{{ ticket.description() }}
 									<span class="badge bg-secondary rounded-pill">{{ ticket.dateEnd|date("d/m/Y") }}</span>
 								</li>
@@ -141,7 +140,15 @@
 													{{ ticket.status }}
 												</span>
 											</td>
-											<td>{{ ticket.technicien ? ticket.technicien.email : 'Non assigné' }}</td>
+											<td>
+												{{ ticket.technicien ? 
+														(ticket.technicien.contactInformation ? 
+															ticket.technicien.contactInformation.lastName ~ ' ' ~ 
+															ticket.technicien.contactInformation.firstName ~ 
+															' ' 
+														: ticket.technicien.email) 
+													: 'Non assigné' }}
+											</td>
 											<td>
 												<button class="btn btn-sm btn-danger" onclick="deleteTicket({{ ticket.id }})">supprimer</button>
 											</td>
@@ -156,7 +163,7 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th>ID</th>
+
 								<th>Nom</th>
 								<th>Adresse</th>
 								<th>Téléphone</th>
@@ -165,6 +172,7 @@
 								<th>Date de Fin</th>
 								<th>Statut</th>
 								<th>Assigné à</th>
+								<th>Intervention</th>
 								<th>Actions</th>
 							</tr>
 						</thead>
@@ -231,8 +239,6 @@
 							{% endfor %}
 						</tbody>
 					</table>
-
-
 				</div>
 			</div>
 
@@ -243,7 +249,8 @@
 
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
 			<script>
-				document.addEventListener('DOMContentLoaded', function () { // Graphique circulaire pour les statistiques des tickets
+				console.log(openTickets, inProgressTickets, resolvedToday);
+document.addEventListener('DOMContentLoaded', function () { // Graphique circulaire pour les statistiques des tickets
 var ctx = document.getElementById('ticketStats').getContext('2d');
 var myChart = new Chart(ctx, {
 type: 'doughnut',
@@ -272,16 +279,15 @@ text: 'Répartition des Tickets'
 }
 });
 
+
 // Simulation de mise à jour en temps réel
-{
-# setInterval(function () {
-document.getElementById('openTickets').textContent = Math.floor(Math.random() * 50);
+
+setInterval(function () {
+{# document.getElementById('openTickets').textContent = Math.floor(Math.random() * 50);
 document.getElementById('inProgressTickets').textContent = Math.floor(Math.random() * 30);
-document.getElementById('resolvedToday').textContent = Math.floor(Math.random() * 20);
+document.getElementById('resolvedToday').textContent = Math.floor(Math.random() * 20); #}
 document.getElementById('avgResolutionTime').textContent = (Math.random() * 24).toFixed(1) + ' h';
 }, 5000);
-#
-}
 });
 			</script>
 		{% endblock %}
