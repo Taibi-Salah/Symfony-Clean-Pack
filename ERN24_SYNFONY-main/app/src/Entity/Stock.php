@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Entity;
-
-use App\Repository\StockRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Assert\Unique;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\StockRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: StockRepository::class)]
 class Stock

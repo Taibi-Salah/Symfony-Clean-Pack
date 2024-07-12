@@ -65,14 +65,7 @@ class UserController extends AbstractController
             'error' => $error,
         ]);
     }
-
-
-    // #[Route('/dashboard', name: 'app_dashboard')]
-    // public function dashboard(): Response
-    // {
-    //     // You can add logic here to fetch data or perform actions needed for the dashboard
-    //     return $this->render('home/dashboard.html.twig');
-
+     
 
 
     #[Route('/inscription', name: 'app_inscription')]
@@ -111,8 +104,8 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $ticket->setUser($this->getUser());
 
-            $ticket->setStatus('ouvert'); // Set the default status  
 
+            $ticket->setStatus('ouvert'); // Set the default status
 
             $this->entityManager->persist($ticket);
             $this->entityManager->flush();

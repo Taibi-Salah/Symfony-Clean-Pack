@@ -33,6 +33,7 @@ class DashboardController extends AbstractController
         // Fetch all tickets
         $tickets = $this->entityManager->getRepository(Ticket::class)->findinfos();
 
+
         // Fetch technicians
         $technicians = $this->entityManager->getRepository(User::class)->findByRole('ROLE_TECHNICIEN');
       
@@ -51,14 +52,7 @@ class DashboardController extends AbstractController
         //  render view;
         return $this->render('home/dashboard.html.twig', $data);
     }
- }
-
-
-
-
-
-
-
+}
 
 
 
