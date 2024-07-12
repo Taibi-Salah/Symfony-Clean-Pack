@@ -25,7 +25,7 @@ class Stock
     private ?int $quantity = null;
 
     #[ORM\Column(type: 'boolean')]
-    private ?bool $isActive = true;
+    private ?bool $isActive = null;
 
     #[ORM\ManyToOne(inversedBy: 'stocks')]
     private ?User $supplier = null;
@@ -82,12 +82,12 @@ class Stock
         return $this;
     }
 
-    public function isActive(): ?bool
+    public function getIsActive(): ?bool
     {
         return $this->isActive;
     }
 
-    public function setActive(bool $isActive): static
+    public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
 

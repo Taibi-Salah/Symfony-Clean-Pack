@@ -29,7 +29,7 @@ class StockFixtures extends Fixture implements FixtureGroupInterface, DependentF
             $st->setLabel($stock);
             $st->setReferenceNb('REF-' . strtoupper($stock));
             $st->setQuantity(rand(1, 100));
-            $st->setActive(true);
+            $st->setIsActive(true);
 
             try {
                 $st->setSupplier($this->getReference($suppliers[rand(0, 1)]));

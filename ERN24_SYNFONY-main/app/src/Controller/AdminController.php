@@ -2,11 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\Stock;
+use App\Entity\User;
+use App\Form\StockType;
+use App\Form\UserType;
 use App\Repository\StockRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\UserRepository;
 use App\Repository\TicketRepository;
@@ -24,8 +29,13 @@ class AdminController extends AbstractController
     }
 
     #[Route('/admin', name: 'admin_dashboard')]
-    public function index(UserRepository $userRepository, TicketRepository $ticketRepository, StockRepository $stockRepository): Response
-    {
+    public function index(
+        UserRepository $userRepository,
+        TicketRepository $ticketRepository,
+        StockRepository $stockRepository,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
         // Retrieve all users and tickets from the database
         $users = $userRepository->findAll();
         $tickets = $ticketRepository->findAll();
@@ -33,13 +43,26 @@ class AdminController extends AbstractController
         $technicians = $userRepository->findByRole('ROLE_TECHNICIEN');
         $suppliers = $userRepository->findByRole('ROLE_SUPPLIER');
 
-        $this->denyAccessUnlessGranted('ROLE_ADMIN'); //seul l'utilisateur connecté en tant qu'admin peut accéder à cette page
+        // Add stock form
+        $stock = new Stock();
+        $form = $this->createForm(StockType::class, $stock);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($stock);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('admin_dashboard');
+        }
+
+        $this->denyAccessUnlessGranted('ROLE_ADMIN'); // Only users with ROLE_ADMIN can access this page
         return $this->render('admin/index.html.twig', [
             'users' => $users,
             'tickets' => $tickets,
             'technicians' => $technicians,
             'stocks' => $stocks,
             'suppliers' => $suppliers,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -107,37 +130,28 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('admin_dashboard');
     }
 
-    #[Route('/user/supplier-list', name: 'user_supplier')]
-    public function supplierList(StockRepository $stockRepository, UserRepository $userRepository): Response
+    #[Route('/admin/supplier-list', name: 'supplier_list')]
+    public function supplierList(): Response
     {
-        $stocks = $stockRepository->findAll();
-        $suppliers = $userRepository->findByRole('ROLE_SUPPLIER');
-
-        return $this->render('user/supplier.html.twig', [
-            'stocks' => $stocks,
-            'suppliers' => $suppliers,
-        ]);
+        // Add logic to handle supplier list if necessary
+        return $this->render('admin/supplier_list.html.twig');
     }
 
-    #[Route('/admin/assign-supplier/{id}', name: 'admin_assign_supplier', methods: ['POST'])]
-    public function assignSupplier($id, Request $request, StockRepository $stockRepository, UserRepository $userRepository, EntityManagerInterface $entityManager): JsonResponse
+
+    #[Route('/admin/assign-supplier/{id}', name: 'admin_assign_supplier')]
+    public function assignSupplier(Request $request, StockRepository $stockRepository, UserRepository $userRepository, EntityManagerInterface $entityManager, $id): Response
     {
         $stock = $stockRepository->find($id);
-        if (!$stock) {
-            return new JsonResponse(['success' => false], 404);
-        }
-
         $supplierId = $request->request->get('supplier_id');
-        $supplier = $userRepository->find($supplierId);
-        if (!$supplier) {
-            return new JsonResponse(['success' => false], 404);
+
+        if ($supplierId) {
+            $supplier = $userRepository->find($supplierId);
+            $stock->setSupplier($supplier);
+            $entityManager->persist($stock);
+            $entityManager->flush();
         }
 
-        $stock->setSupplier($supplier);
-        $entityManager->persist($stock);
-        $entityManager->flush();
-
-        return new JsonResponse(['success' => true]);
+        return $this->redirectToRoute('admin_dashboard');
     }
 
 }

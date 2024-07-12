@@ -14,7 +14,7 @@
                 {% if app.user %}
                     <p>Welcome, <strong>{{ app.user.email }}</strong>! You have the following roles: <strong>{{ app.user.roles|join(', ') }}</strong></p>
                     <a href="{{ path('admin_catalogue')}}" class="btn btn-primary mb-3">Catalogue de pièces</a>
-                    <a href="{{ path('user_supplier')}}" class="btn btn-primary mb-3">Supplier list</a>
+                    <a href="{{ path('supplier_list')}}" class="btn btn-primary mb-3">Supplier list</a>
 
                     <h2>Users</h2>
                     <ul class="list-group mb-3">
@@ -48,7 +48,7 @@
                                 <td>{{ ticket.technicien ? ticket.technicien.email : 'Non assigné' }}</td>
                                 <td>{{ ticket.intervention ? ticket.intervention.label : 'Non assigné' }}</td>
                                 <td>
-                                    <form method="post" action="{{ path('admin_assign_ticket', {id: ticket.id}) }}" class="ajax-form">
+                                    <form method="post" action="{{ path('admin_assign_ticket', {id: ticket.id}) }}">
                                         <select name="technician_id" class="form-select">
                                             <option value="">Choisir un technicien</option>
                                             {% for technician in technicians %}
@@ -88,7 +88,7 @@
                                 <td>{{ stock.isActive ? 'Yes' : 'No' }}</td>
                                 <td>{{ stock.supplier ? stock.supplier.email : 'No supplier' }}</td>
                                 <td>
-                                    <form method="post" action="{{ path('admin_assign_supplier', {id: stock.id}) }}" class="ajax-form">
+                                    <form method="post" action="{{ path('admin_assign_supplier', {id: stock.id}) }}">
                                         <select name="supplier_id" class="form-select">
                                             <option value="">Choisir un fournisseur</option>
                                             {% for supplier in suppliers %}
@@ -99,15 +99,46 @@
                                         </select>
                                         <button type="submit" class="btn btn-sm btn-primary mt-2">Assigner</button>
                                     </form>
-
                                 </td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
-                    <form action="{{ path('app_logout') }}" method="post">
-                        <button type="submit" class="btn btn-danger">Logout</button>
+
+                    <h2>Request Stock</h2>
+                    <form class="table">
+                        <div class="mb-3">
+                            <label for="label" class="form-label">{{ form_label(form.label) }}:</label>
+                            {{ form_widget(form.label, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="referenceNb" class="form-label">{{ form_label(form.referenceNb) }}:</label>
+                            {{ form_widget(form.referenceNb, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="quantity" class="form-label">{{ form_label(form.quantity) }}:</label>
+                            {{ form_widget(form.quantity, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="isActive" class="form-label">{{ form_label(form.isActive) }}:</label>
+                            <div class="form-check form-switch d-inline-block">
+                                {{ form_widget(form.isActive, {'attr': {'class': 'form-check-input form-check-input-lg'}}) }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="supplier" class="form-label">{{ form_label(form.supplier) }}:</label>
+                            {{ form_widget(form.supplier, {'attr': {'class': 'form-select'}}) }}
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Stock</button>
                     </form>
+                    {{ form_end(form) }}
+
+                    <div class="text-end mt-3">
+                        <form action="{{ path('app_logout') }}" method="post">
+                            <button type="submit" class="btn btn-danger">Logout</button>
+                        </form>
+                    </div>
+
                 {% else %}
                     <p>You are not logged in.</p>
                     <a href="{{ path('app_login') }}" class="btn btn-primary">Login</a>
@@ -116,32 +147,4 @@
         </div>
     </div>
     {{ include('home/partials/footer.html.twig') }}
-
-    <script>
-        document.querySelectorAll('.ajax-form').forEach(function(form) {
-            form.addEventListener('submit', function(event) {
-                event.preventDefault();
-                var formData = new FormData(form);
-                fetch(form.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Supplier updated successfully.');
-                        } else {
-                            alert('Failed to update supplier.');
-                        }
-                    })
-                    .catch(error => {
-                        alert('An error occurred.');
-                        console.error('Error:', error);
-                    });
-            });
-        });
-    </script>
 {% endblock %}
