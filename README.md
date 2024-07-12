@@ -5,9 +5,9 @@
 <p>3- Ouvrir un terminal et se positionner sur le dossier ERN24_SYMFONY-main</p>
 <p>4- Faire la commande docker compose up --build (pour construire le container)</p>
 <p>5- docker exec -it phpimmo composer install (installer le dossier vendor, Appuyer sur n quand il vous demander une autre recette docker)</p>
-<p>6- Se connecter à la bdd graĉe au données sur docker-compose.yml </p>
-<p>7- docker exec -it phpimmo bin/console d:m:m</p>
-<p></p>8- docker exec -it phpimmo bin/console d:f:l </p>
+<p>6- Se connecter à la BDD graĉe au données sur docker-compose.yml </p>
+<p>7- docker exec -it phpimmo bin/console d:m:m(construction de la BDD)</p>
+<p></p>8- docker exec -it phpimmo bin/console d:f:l (pour apporter des données rapidement) </p>
 
 
 <h2> Pour apporter des modifications</h2>
