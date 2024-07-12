@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Ticket;
+use App\Entity\Facturation;
 use App\Form\UserType;
 use App\Form\LoginType;
 use App\Form\TicketType;
@@ -11,9 +12,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class UserController extends AbstractController
 {
@@ -27,7 +30,6 @@ class UserController extends AbstractController
     #[Route('/connexion', name: 'app_connexion')]
     public function login(AuthenticationUtils $authenticationUtils, Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
-        // If user is already logged in, redirect them to dashboard
         if ($this->getUser()) {
             return $this->redirectToRoute('app_dashboard');
         }
@@ -35,38 +37,23 @@ class UserController extends AbstractController
         $form = $this->createForm(LoginType::class);
         $form->handleRequest($request);
 
-        // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-
-        // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Retrieve form data (as an object of Client entity)
             /** @var User $formData */
             $formData = $form->getData();
-
-            // Get the email entered in the form
             $email = $formData->getEmail();
-
-            // Find the client by email in the database
-            $client = $this->entityManager->getRepository(Client::class)->findOneBy(['email' => $email]);
+            $client = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
 
             if (!$client) {
-                // Handle non-existent client (email not found)
                 $this->addFlash('error', 'Email non trouvé.');
                 return $this->redirectToRoute('app_connexion');
             }
 
-            // Check if the password is correct using UserPasswordHasherInterface
             if ($passwordHasher->isPasswordValid($client, $formData->getPassword())) {
-                // Password is valid, proceed with authentication
-                // This part is usually handled by Symfony's security system automatically
-
-                // Redirect to dashboard upon successful login
                 return $this->redirectToRoute('app_dashboard');
             } else {
-                // Handle incorrect password
                 $this->addFlash('error', 'Mot de passe incorrect.');
                 return $this->redirectToRoute('app_connexion');
             }
@@ -79,29 +66,39 @@ class UserController extends AbstractController
         ]);
     }
 
+
     // #[Route('/dashboard', name: 'app_dashboard')]
     // public function dashboard(): Response
     // {
     //     // You can add logic here to fetch data or perform actions needed for the dashboard
     //     return $this->render('home/dashboard.html.twig');
-    // }
+
+    #[Route('/dashboard', name: 'app_dashboard')]
+    public function dashboard(): Response
+    {
+        return $this->render('home/dashboard.html.twig');
+    }
+
 
     #[Route('/inscription', name: 'app_inscription')]
-    public function register(Request $request, UserPasswordHasherInterface $passwordHasher): Response
+    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
-        
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Encode the plain password before storing
             $user->setPassword($passwordHasher->hashPassword($user, $user->getPassword()));
+
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 
+            $message = 'Registration successful. Please check your email for confirmation.';
+            $this->addFlash('success', $message);
+
             // Redirect to login page after successful registration
-            return $this->redirectToRoute('app_tickets');
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('home/connexion/inscription.html.twig', [
@@ -114,29 +111,34 @@ class UserController extends AbstractController
     {
         $ticket = new Ticket();
         $form = $this->createForm(TicketType::class, $ticket);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $ticket->setUser($this->getUser());
+
             $ticket->setStatus('ouvert'); // Set the default status
+
+            $ticket->setStatus('open');
+
 
             $this->entityManager->persist($ticket);
             $this->entityManager->flush();
 
-            // Redirect to the tickets page or any other page
             return $this->redirectToRoute('app_tickets');
         }
 
-        // Filter tickets by the current user
         $tickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'user' => $this->getUser(),
+
             'status' => 'ouvert'
         ]);
       
         $tickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'user' => $this->getUser(),
             'status' => 'en cours'
+
+            'status' => ['open', 'paid']
+
         ]);
         $closedTickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'user' => $this->getUser(),
@@ -150,14 +152,99 @@ class UserController extends AbstractController
         ]);
     }
 
+
     #[Route('/technicien', name: 'app_ticket')]
-    public function ticket(): Response
+    public function technicien(): Response
     {
+        if (!$this->isGranted('ROLE_TECHNICIEN')) {
+            throw new AccessDeniedException('Access Denied. You do not have permission to access this page.');
+        }
+
+        $technicien = $this->getUser();
+        $tickets = $this->entityManager->getRepository(Ticket::class)->findBy([
+            'technicien' => $technicien,
+            'status' => 'open'
+        ]);
+        $closedTickets = $this->entityManager->getRepository(Ticket::class)->findBy([
+            'technicien' => $technicien,
+            'status' => 'closed'
+        ]);
+
         return $this->render('user/technicien.html.twig', [
-            'controller_name' => 'HomeController',
+            'tickets' => $tickets,
+            'closed_tickets' => $closedTickets,
         ]);
     }
+
+    #[Route('/ticket/edit/{id}', name: 'ticket_edit')]
+    public function edit(Ticket $ticket, Request $request): Response
+    {
+        $form = $this->createForm(TicketType::class, $ticket);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->flush();
+            return $this->redirectToRoute('app_ticket');
+        }
+
+        return $this->render('ticket/edit.html.twig', [
+            'form' => $form->createView(),
+            'ticket' => $ticket,
+        ]);
+    }
+
+    #[Route('/ticket/close/{id}', name: 'ticket_close')]
+    public function close(Ticket $ticket): Response
+    {
+        $ticket->setStatus('closed');
+        $ticket->setDateEnd(new \DateTime());
+
+        $description = $this->generateFinalReport($ticket);
+
+        $facturation = new Facturation();
+        $facturation->setValue($description);
+
+        $this->entityManager->persist($facturation);
+        $this->entityManager->flush();
+
+        $this->addFlash('success', 'Ticket closed successfully.');
+        return $this->redirectToRoute('app_ticket');
+    }
+
+    private function generateFinalReport(Ticket $ticket): string
+    {
+        $technicianId = $ticket->getTechnicien() ? $ticket->getTechnicien()->getId() : 'N/A';
+        $clientId = $ticket->getUser() ? $ticket->getUser()->getId() : 'N/A';
+        $creationDate = $ticket->getDateStart() ? $ticket->getDateStart()->format('d/m/Y H:i') : 'N/A';
+        $closingDate = $ticket->getDateEnd() ? $ticket->getDateEnd()->format('d/m/Y H:i') : 'N/A';
+
+        $stockUsages = $ticket->getIntervention()->getInterventionStocks();
+        $stockDetails = '';
+
+        foreach ($stockUsages as $stockUsage) {
+            $stockDetails .= sprintf(
+                "Date d'utilisation: %s, Stock: %s, Quantité Utilisée: %d, Description: %s\n",
+                $stockUsage->getUsedAt()->format('d/m/Y H:i'),
+                $stockUsage->getStock()->getLabel(),
+                $stockUsage->getQuantityUsed(),
+                $stockUsage->getDescription()
+            );
+        }
+
+        return sprintf(
+            "Ticket ID: %d\nTechnician ID: %s\nClient ID: %s\nDate de Création: %s\nDate de Clôture: %s\n\nStock Utilisé:\n%s",
+            $ticket->getId(),
+            $technicianId,
+            $clientId,
+            $creationDate,
+            $closingDate,
+            $stockDetails
+        );
+    }
 }
+
+
+
 
 
 

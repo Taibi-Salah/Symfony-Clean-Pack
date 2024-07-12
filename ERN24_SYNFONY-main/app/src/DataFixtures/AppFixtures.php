@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\User;
 use App\Entity\Ticket;
+use App\Entity\Stock;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -82,10 +83,55 @@ class AppFixtures extends Fixture
         $ticket2->setDescription('Ticket 2 description');
         $manager->persist($ticket2);
 
+        // Create supplier users
+        $supplier1 = new User();
+        $supplier1->setEmail('supplier1@example.com');
+        $supplier1->setRoles(['ROLE_SUPPLIER']);
+        $supplier1->setPassword($this->passwordHasher->hashPassword(
+            $supplier1,
+            'supplierpassword1'
+        ));
+        $supplier1->setActive(true);
+        $manager->persist($supplier1);
+
+        $supplier2 = new User();
+        $supplier2->setEmail('supplier2@example.com');
+        $supplier2->setRoles(['ROLE_SUPPLIER']);
+        $supplier2->setPassword($this->passwordHasher->hashPassword(
+            $supplier2,
+            'supplierpassword2'
+        ));
+        $supplier2->setActive(true);
+        $manager->persist($supplier2);
+
+        // Flush users to get their IDs
+        $manager->flush();
+
+        // Create stock entries
+        $stock1 = new Stock();
+        $stock1->setLabel('Stock Item 1');
+        $stock1->setReferenceNb('REF001');
+        $stock1->setQuantity(100);
+        $stock1->setActive(true);
+        $stock1->setSupplier($supplier1); // Set the supplier as a User entity
+        $manager->persist($stock1);
+
+        $stock2 = new Stock();
+        $stock2->setLabel('Stock Item 2');
+        $stock2->setReferenceNb('REF002');
+        $stock2->setQuantity(200);
+        $stock2->setActive(true);
+        $stock2->setSupplier($supplier2); // Set the supplier as a User entity
+        $manager->persist($stock2);
+
         // Flush all to the database
         $manager->flush();
     }
 }
+
+
+
+
 
 
 

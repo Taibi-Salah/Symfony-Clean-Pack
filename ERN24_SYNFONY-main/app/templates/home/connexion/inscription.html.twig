@@ -8,22 +8,30 @@
     {{ include('home/partials/header.html.twig') }}
       
     <section id="hero" class="section form">
-        <h2 class="formtitle">Créer un compte</h2>
+        <h2 class="form-title">Créer un compte</h2>
         <div class="container">
+
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     {# templates/user/new.html.twig #}
-{{ form_start(form) }}
-{{ form_row(form.email) }} {# Assurez-vous que le champ "roles" est correctement affiché #}
-{{ form_row(form.Password) }}
-{{ form_row(form.ContactInformation)}}
-<button name="submit" value="submit">Envoyer</button>
+                    
+<div class="form-group">
+{{ form_start(form)}}
 
+{{form_row(form.email)}}
+</div>
+{{ form_row(form.Password) }}
+
+{{ form_row(form.Roles)}}
+{{ form_row(form.ContactInformation)}}
+<div class=" d-flex justify-content-center mt-3">
+<button class="button-form"name="submit" value="submit">S'inscrire</button>
+</div>
 {{ form_end(form) }}
 
-                    <p class="text-center mt-3">Vous avez déjà un compte ? <a href="{{ path('app_connexion') }}">Connectez-vous</a></p>
-                </div>
+<p class="text-center mt-3">Vous avez déjà un compte ? <a href="{{ path('app_login') }}">Connectez-vous</a></p>
             </div>
+        </div>
         </div>
     </section>
 
