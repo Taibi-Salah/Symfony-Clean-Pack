@@ -3,20 +3,21 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Stock;
 use App\Entity\Ticket;
-use App\Entity\Facturation;
 use App\Form\UserType;
 use App\Form\LoginType;
 use App\Form\TicketType;
+use App\Entity\Facturation;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class UserController extends AbstractController
 {
@@ -119,7 +120,7 @@ class UserController extends AbstractController
             'status' => 'ouvert'
         ]);
       
-        $tickets = $this->entityManager->getRepository(Ticket::class)->findBy([
+        $tickets_progress = $this->entityManager->getRepository(Ticket::class)->findBy([
             'user' => $this->getUser(),
             'status' => 'en cours'
 
@@ -131,6 +132,7 @@ class UserController extends AbstractController
 
         return $this->render('user/ticket.html.twig', [
             'tickets' => $tickets,
+            'tickets_progress' => $tickets_progress,
             'closed_tickets' => $closedTickets,
             'form' => $form->createView(),
         ]);
@@ -149,14 +151,23 @@ class UserController extends AbstractController
             'technicien' => $technicien,
             'status' => 'ouvert'
         ]);
+        $tickets_progress = $this->entityManager->getRepository(Ticket::class)->findBy([
+            'technicien' => $technicien,
+            'status' => 'en cours'
+        ]);
         $closedTickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'technicien' => $technicien,
             'status' => 'resolus'
         ]);
 
+        //ici on va chercher les stocks et afficher un messahge d'erreur si le stock est insuffisant
+         $stocks = $this->entityManager->getRepository(Stock::class)->findAll();
+
         return $this->render('user/technicien.html.twig', [
             'tickets' => $tickets,
+            'tickets_progress' => $tickets_progress,
             'closed_tickets' => $closedTickets,
+            'stocks' => $stocks,
         ]);
     }
 

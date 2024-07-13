@@ -120,9 +120,9 @@ class AdminController extends AbstractController
         $form = $this->createForm(EditPieceType::class, $piece);
         $form->handleRequest($request);
         
-
         if ($form->isSubmitted() && $form->isValid()) { // Set the default status
             $piece->setActive('True');
+            
             $this->entityManager->persist($piece);
             $this->entityManager->flush();
 

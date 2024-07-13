@@ -2797,8 +2797,3 @@ section,
   margin-top: 50px;
   margin-bottom: 50px;
 }
-ul li ol{
-  /* ici je veux suprrimer mes puces de liste */
-  list-style-type: none;
-
-}

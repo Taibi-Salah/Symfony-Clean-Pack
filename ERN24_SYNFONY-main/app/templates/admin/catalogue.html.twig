@@ -13,6 +13,13 @@
                 <a href="{{ path('admin_dashboard')}}" class="btn btn-success mb-3">Retour</a>
                 <a href="{{ path('app_addpiece')}}" class="btn btn-primary mb-3">Créer une pièce</a>
                 <a href="{{ path('admin_history')}}" class="btn btn-primary mb-3">Entrée/Sortie Pièces</a>
+                {% for stock in stock %}
+            {% if stock.quantity < 10 %}
+            <div class="alert alert-warning text-center" role="alert">
+                <i class="bi bi-exclamation-circle-fill"></i> Attention !! Le stock de {{ stock.label }} (Référence : {{ stock.referenceNb}}) est faible. Il reste {{ stock.quantity }} unités.
+            </div>
+            {% endif %}
+            {% endfor %}
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -41,6 +48,7 @@
                     </tbody>
                 </table>
             </div>
+            
         </div>
     </div>
 </body>

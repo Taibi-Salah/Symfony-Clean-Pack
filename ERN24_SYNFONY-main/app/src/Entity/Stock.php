@@ -18,13 +18,15 @@ class Stock
     private ?int $id = null;
 
     #[ORM\Column(length: 255,)]
+    #[Assert\NotBlank]
     private ?string $label = null;
 
     #[ORM\Column(length: 255)]
-    
+    #[Assert\NotBlank]
     private ?string $referenceNb = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank]
     private ?int $quantity = null;
 
     #[ORM\Column]

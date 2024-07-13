@@ -28,8 +28,8 @@
         </div>
 
         <div class="card mt-4">
-            <div class="card-header">
-                <h2 class="text-center">Tickets en cours</h2>
+        <div class="card-header">
+                <h2 class="text-center">Tickets Ouverts</h2>
             </div>
             <div class="card-body">
                 <table class="table table-striped">
@@ -46,7 +46,45 @@
                             <tr>
                                 <th scope="row">{{ ticket.id }}</th>
                                 <td>{{ ticket.description }}</td>
-                                <td>{{ ticket.status }}</td>
+                                <td><span class="badge bg-success">{{ ticket.status }}
+                                </span></td>
+                                <td>
+
+                                    {% if ticket.status == 'résolus' %}
+                                        <a href="{{ path('create_checkout_session', {'ticketId': ticket.id}) }}" class="btn btn-success btn-sm">Payez Ici pour la prise en charge d'un technicien</a>
+                                   {% else %}
+                                   <p> Aucune action possible</p>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center">Aucun ticket en cours</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-header">
+                <h2 class="text-center">Tickets En cours</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Statut</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ticket in tickets_progress %}
+                            <tr>
+                                <th scope="row">{{ ticket.id }}</th>
+                                <td>{{ ticket.description }}</td>
+                                <td><span class="badge bg-success">{{ ticket.status }}
+                                </span></td>
                                 <td>
                                     <a href="#" class="btn btn-warning btn-sm">Modifier</a>
                                     <a href="#" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous vraiment supprimer ce ticket?')">Supprimer</a>
@@ -66,7 +104,7 @@
         </div>
         <div class="card mt-4">
             <div class="card-header">
-                <h2>Historique des Tickets Clôturés</h2>
+                <h2 class="text-center">Historique des Tickets Clôturés</h2>
             </div>
             <div class="card-body">
                 <table class="table table-striped">
