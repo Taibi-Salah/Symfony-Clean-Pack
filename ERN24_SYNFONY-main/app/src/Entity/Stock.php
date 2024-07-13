@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 use Symfony\Component\Validator\Constraints as Assert;
-use Assert\Unique;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\StockRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: StockRepository::class)]
+#[UniqueEntity(fields: ['referenceNb'], message: 'Cette référence existe déjà')]
 class Stock
 {
     #[ORM\Id]
@@ -16,10 +17,11 @@ class Stock
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,)]
     private ?string $label = null;
 
     #[ORM\Column(length: 255)]
+    
     private ?string $referenceNb = null;
 
     #[ORM\Column]
