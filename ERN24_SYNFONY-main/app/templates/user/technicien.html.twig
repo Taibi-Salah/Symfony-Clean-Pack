@@ -29,7 +29,9 @@
                             <tr>
                                 <th scope="row">{{ ticket.id }}</th>
                                 <td>{{ ticket.description }}</td>
-                                <td>{{ ticket.status }}</td>
+                                <td>
+                                <span class="badge bg-warning">{{ ticket.status }}
+                                </span></td>
                                 <td>
                                     <a href="{{ path('stock_list', {'ticketId': ticket.id}) }}" class="btn btn-warning btn-sm">Gestion du Ticket</a>
                                     <a href="{{ path('ticket_delete', {'id': ticket.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous vraiment supprimer ce ticket?')">Clôturer le Ticket</a>
@@ -46,7 +48,7 @@
         </div>
         <div class="card mt-4">
             <div class="card-header">
-                <h2>Historique des Tickets Clôturés</h2>
+                <h2 class="text-center">Historique des Tickets Clôturés</h2>
             </div>
             <div class="card-body">
                 <table class="table table-striped">
@@ -72,7 +74,15 @@
                     </tbody>
                 </table>
             </div>
+            
         </div>
+        {% for stock in stocks %}
+            {% if stock.quantity < 10 %}
+            <div class="alert alert-warning text-center" role="alert">
+                <i class="bi bi-exclamation-circle-fill"></i> Attention !! Le stock de {{ stock.label }} est faible. Il reste {{ stock.quantity }} unités.
+            </div>
+            {% endif %}
+            {% endfor %}
     </div>
     {{ include('home/partials/footer.html.twig') }}
 {% endblock %}

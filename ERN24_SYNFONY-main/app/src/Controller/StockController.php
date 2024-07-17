@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\InterventionStock;
 use App\Entity\Stock;
 use App\Entity\Ticket;
 use App\Form\AddStockType;
@@ -31,10 +32,11 @@ class StockController extends AbstractController
 
         // Fetch available stock
         $stocks = $this->entityManager->getRepository(Stock::class)->findAll();
+        
 
         return $this->render('stock/list.html.twig', [
             'stocks' => $stocks,
-            'ticket' => $ticket,
+            'ticket' => $ticket
         ]);
     }
 

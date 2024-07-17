@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Stock;
 use App\Form\AddStockType;
+use App\Form\EditPieceType;
 use App\Entity\Intervention;
 use App\Repository\UserRepository;
 use App\Repository\TicketRepository;
@@ -12,8 +13,8 @@ use App\Repository\InterventionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AdminController extends AbstractController
 {
@@ -65,12 +66,14 @@ class AdminController extends AbstractController
             $stock = new Stock();
             $form = $this->createForm(AddStockType::class, $stock);
             $form->handleRequest($request);
+
             //ici on vas vérifie que les donénessont correctes
             
             if ($form->isSubmitted() && $form->isValid()) { // Set the default status
                 $stock->setActive('True');
                 $this->entityManager->persist($stock);
                 $this->entityManager->flush();
+                
     
                 return $this->redirectToRoute('admin_catalogue');
             }
@@ -106,16 +109,31 @@ class AdminController extends AbstractController
 
 
     #[Route('/admin/editpiece/{id}', name: 'app_editpiece')]
-    public function updateticket($id): Response
+    public function updateticket($id,Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $piece= $this->entityManager->getRepository(Stock::class)->findOneBy(
             ['id' => $id]
         );
+        
+
+        $form = $this->createForm(EditPieceType::class, $piece);
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) { // Set the default status
+            $piece->setActive('True');
+            
+            $this->entityManager->persist($piece);
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('admin_catalogue');
+        }
+
     
         return $this->render('admin/form/editpiece.html.twig', [
             'controller_name' => 'HomeController',
             'piece' => $piece,
+            'form' => $form->createView(),
         ]);
     }
 

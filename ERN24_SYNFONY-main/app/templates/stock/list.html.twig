@@ -55,20 +55,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for interventionStock in ticket.intervention.interventionStocks %}
+                                    {# {% for intervention in ticket.intervention.interventionStock %} #}
                                         <tr>
-                                            <td>{{ ticket.id }}</td>
-                                            <td>{{ ticket.technicien ? ticket.technicien.id : 'N/A' }}</td>
-                                            <td>{{ interventionStock.usedAt|date('d/m/Y H:i') }}</td>
-                                            <td>{{ interventionStock.stock.label }}</td>
-                                            <td>{{ interventionStock.quantityUsed }}</td>
-                                            <td>{{ interventionStock.description }}</td>
+                                            <td> ticket.id </td>
+                                            <td> ticket.technicien ? ticket.technicien.id : 'N/A' </td>
+                                            <td> interventionStock.usedAt|date('d/m/Y H:i') </td>
+                                            <td> interventionStock.stock.label </td>
+                                            <td>  interventionStock.quantityUsed </td>
+                                            <td> interventionStock.description </td>
                                         </tr>
-                                    {% else %}
+                                    {# {% else %} #}
                                         <tr>
                                             <td colspan="6" class="text-center">Aucun stock utilisé</td>
                                         </tr>
-                                    {% endfor %}
+                                    {# {% endfor %} #}
                                 </tbody>
                             </table>
                         </div>
