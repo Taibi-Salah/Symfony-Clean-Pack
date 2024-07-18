@@ -78,6 +78,20 @@ class TicketController extends AbstractController
         return new JsonResponse(['status' => 'error', 'message' => 'Invalid request.']);
     }
 
+
+    #[Route('/ticket/in_progress/{id}', name: 'ticket_in_progress')]
+    public function in_progress(Ticket $ticket): Response
+    {
+        $ticket->setStatus('en cours');
+
+        $this->entityManager->flush();
+
+        $this->addFlash('success', 'Ticket in progress.');
+        return $this->redirectToRoute('app_ticket');
+    }
+
+
+
     #[Route('/ticket/close/{id}', name: 'ticket_close')]
     public function close(Ticket $ticket, Request $request): Response
     {
