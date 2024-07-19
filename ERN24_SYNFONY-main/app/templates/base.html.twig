@@ -2,6 +2,7 @@
 <html>
 <head>
     {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
         {{ encore_entry_link_tags('app') }}
         <link href="https://fonts.googleapis.com" rel="preconnect">
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
@@ -28,6 +29,7 @@
     {% endblock %}
 
     {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
         {{ encore_entry_script_tags('app') }}
         <!-- Vendor JS Files -->
         <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

@@ -191,18 +191,24 @@ class UserController extends AbstractController
     #[Route('/ticket/close/{id}', name: 'ticket_close')]
     public function close(Ticket $ticket): Response
     {
+        // Update ticket status and end date
         $ticket->setStatus('resolus');
         $ticket->setDateEnd(new \DateTime());
 
-        $description = $this->generateFinalReport($ticket);
+        // Update intervention stocks
+        $interventionStocks = $ticket->getIntervention()->getInterventionStocks();
+        foreach ($interventionStocks as $interventionStock) {
+            // Assuming you're updating something in the interventionStock
+            $interventionStock->setDescription('Closed'); // Example update
+            $this->entityManager->persist($interventionStock);
+        }
 
-        $facturation = new Facturation();
-        $facturation->setValue($description);
-
-        $this->entityManager->persist($facturation);
         $this->entityManager->flush();
 
+        // Add a success flash message
         $this->addFlash('success', 'Ticket closed successfully.');
+
+        // Redirect to the ticket list or another appropriate page
         return $this->redirectToRoute('app_ticket');
     }
 

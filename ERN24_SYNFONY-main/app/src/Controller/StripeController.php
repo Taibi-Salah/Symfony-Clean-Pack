@@ -1,15 +1,14 @@
 <?php
 
-// src/Controller/StripeController.php
-
 namespace App\Controller;
 
+use App\Entity\Facturation;
 use App\Entity\Ticket;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Stripe\Checkout\Session;
 use Stripe\Stripe;
@@ -66,6 +65,37 @@ class StripeController extends AbstractController
 
         // Update the ticket status to 'paid'
         $ticket->setStatus('paid');
+
+        // Prepare the Facturation data
+        $facturationData = [
+            'ticket_id' => $ticket->getId(),
+            'technician_id' => $ticket->getTechnicien()->getId(),
+            'creation_date' => $ticket->getDateStart()->format('d/m/Y H:i'),
+            'closing_date' => $ticket->getDateEnd()->format('d/m/Y H:i'),
+            'stocks_used' => []
+        ];
+
+        foreach ($ticket->getIntervention()->getInterventionStocks() as $interventionStock) {
+            $facturationData['stocks_used'][] = [
+                'stock_label' => $interventionStock->getStock()->getLabel(),
+                'quantity_used' => $interventionStock->getQuantityUsed(),
+                'description' => $interventionStock->getDescription(),
+                'used_at' => $interventionStock->getUsedAt()->format('d/m/Y H:i')
+            ];
+        }
+
+        // Create Facturation entity
+        $facturation = new Facturation();
+        $facturation->setValue(json_encode($facturationData));
+        $facturation->setDescription('Payment successful for ticket #' . $ticket->getId());
+        $facturation->setInvoiceNumber('INV' . str_pad((string) random_int(1, 999999), 6, '0', STR_PAD_LEFT));
+        $facturation->setInvoiceDate(new \DateTime());
+        $facturation->setDueDate((new \DateTime())->modify('+30 days'));
+        $facturation->setTotalAmount(100); // Set your total amount
+        $facturation->setTaxAmount(10); // Set your tax amount
+        $facturation->setClient($ticket->getUser()); // Updated to getUser
+
+        $this->entityManager->persist($facturation);
         $this->entityManager->flush();
 
         return $this->redirectToRoute('app_tickets');
@@ -84,4 +114,6 @@ class StripeController extends AbstractController
         return 1000; // For example, 10 USD
     }
 }
+
+
 

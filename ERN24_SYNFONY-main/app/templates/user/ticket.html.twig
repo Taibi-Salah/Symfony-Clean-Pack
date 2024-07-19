@@ -28,7 +28,7 @@
         </div>
 
         <div class="card mt-4">
-        <div class="card-header">
+            <div class="card-header">
                 <h2 class="text-center">Tickets Ouverts</h2>
             </div>
             <div class="card-body">
@@ -46,14 +46,12 @@
                             <tr>
                                 <th scope="row">{{ ticket.id }}</th>
                                 <td>{{ ticket.description }}</td>
-                                <td><span class="badge bg-success">{{ ticket.status }}
-                                </span></td>
+                                <td><span class="badge bg-success">{{ ticket.status }}</span></td>
                                 <td>
-
                                     {% if ticket.status == 'résolus' %}
-                                        <a href="{{ path('create_checkout_session', {'ticketId': ticket.id}) }}" class="btn btn-success btn-sm">Payez Ici pour la prise en charge d'un technicien</a>
-                                   {% else %}
-                                   <p> Aucune action possible</p>
+                                        <a href="{{ path('create_checkout_session', {'ticketId': ticket.id}) }}" class="btn btn-success btn-sm">Ticket résolus, Payez-ici</a>
+                                    {% else %}
+                                        <p>Aucune action possible</p>
                                     {% endif %}
                                 </td>
                             </tr>
@@ -65,6 +63,7 @@
                     </tbody>
                 </table>
             </div>
+
             <div class="card-header">
                 <h2 class="text-center">Tickets En cours</h2>
             </div>
@@ -83,14 +82,10 @@
                             <tr>
                                 <th scope="row">{{ ticket.id }}</th>
                                 <td>{{ ticket.description }}</td>
-                                <td><span class="badge bg-success">{{ ticket.status }}
-                                </span></td>
+                                <td><span class="badge bg-success">{{ ticket.status }}</span></td>
                                 <td>
                                     <a href="#" class="btn btn-warning btn-sm">Modifier</a>
                                     <a href="#" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous vraiment supprimer ce ticket?')">Supprimer</a>
-                                    {% if ticket.status == 'open' %}
-                                        <a href="{{ path('create_checkout_session', {'ticketId': ticket.id}) }}" class="btn btn-success btn-sm">Payez Ici pour la prise en charge d'un technicien</a>
-                                    {% endif %}
                                 </td>
                             </tr>
                         {% else %}
@@ -102,6 +97,7 @@
                 </table>
             </div>
         </div>
+
         <div class="card mt-4">
             <div class="card-header">
                 <h2 class="text-center">Historique des Tickets Clôturés</h2>
@@ -113,6 +109,7 @@
                             <th scope="col">#</th>
                             <th scope="col">Description</th>
                             <th scope="col">Date de Clôture</th>
+                            <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -121,6 +118,9 @@
                                 <th scope="row">{{ ticket.id }}</th>
                                 <td>{{ ticket.description }}</td>
                                 <td>{{ ticket.dateEnd|date('d/m/Y') }}</td>
+                                <td>
+                                    <a href="{{ path('create_checkout_session', {'ticketId': ticket.id}) }}" class="btn btn-success btn-sm">Ticket résolus, Payez-ici</a>
+                                </td>
                             </tr>
                         {% else %}
                             <tr>
@@ -134,6 +134,7 @@
     </div>
     {{ include('home/partials/footer.html.twig') }}
 {% endblock %}
+
 
 
 
