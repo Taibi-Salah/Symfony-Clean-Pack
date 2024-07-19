@@ -194,15 +194,20 @@ class UserController extends AbstractController
         $ticket->setStatus('resolus');
         $ticket->setDateEnd(new \DateTime());
 
-        $description = $this->generateFinalReport($ticket);
+        // Update intervention stocks
+        $interventionStocks = $ticket->getIntervention()->getInterventionStocks();
+        foreach ($interventionStocks as $interventionStock) {
+            // Assuming you're updating something in the interventionStock
+            $interventionStock->setDescription('Closed'); // Example update
+            $this->entityManager->persist($interventionStock);
+        }
 
-        $facturation = new Facturation();
-        $facturation->setValue($description);
-
-        $this->entityManager->persist($facturation);
         $this->entityManager->flush();
 
+        // Add a success flash message
         $this->addFlash('success', 'Ticket closed successfully.');
+
+        // Redirect to the ticket list or another appropriate page
         return $this->redirectToRoute('app_ticket');
     }
 
@@ -235,5 +240,24 @@ class UserController extends AbstractController
             $closingDate,
             $stockDetails
         );
+    }
+
+    #[Route('/adduser', name: 'app_adduser', methods: ['POST'])]
+    public function addUser(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher)
+    {
+        $email = $request->request->get('email');
+        $password = $request->request->get('password');
+        $roles = [$request->request->get('roles')];
+
+        $user = new User();
+        $user->setEmail($email);
+        $user->setRoles($roles);
+        $user->setPassword($passwordHasher->hashPassword($user, $password));
+        $user->setActive(true);
+
+        $em->persist($user);
+        $em->flush();
+
+        return $this->redirectToRoute('admin_dashboard'); // Adjust the route name accordingly
     }
 }
