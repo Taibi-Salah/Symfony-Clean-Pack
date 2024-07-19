@@ -150,7 +150,7 @@
 													: 'Non assigné' }}
 											</td>
 											<td>
-												<button class="btn btn-sm btn-danger" onclick="deleteTicket({{ ticket.id }})">supprimer</button>
+												<a href="{{ path('ticket_delete', {id: ticket.id}) }}" class="btn btn-sm btn-danger">Supprimer</a>
 											</td>
 										</tr>
 									{% endfor %}
