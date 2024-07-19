@@ -51,8 +51,7 @@ class DashboardController extends AbstractController
         //  render view;
         return $this->render('home/dashboard.html.twig', $data);
     }
- }
-
+}
 
 
 

@@ -25,6 +25,7 @@ class TicketType extends AbstractType
             ->add('dateEnd', DateTimeType::class, [
                 'widget' => 'single_text',
                 'label' => 'Date de fin',
+<<<<<<< HEAD
             ])
             ->add('status', ChoiceType::class, [
                 'choices' => [
@@ -32,6 +33,9 @@ class TicketType extends AbstractType
                     'Closed' => 'resolus',
                 ],
                 'label' => 'Statut',
+=======
+
+>>>>>>> main
             ]);
     }
 
@@ -42,6 +46,8 @@ class TicketType extends AbstractType
         ]);
     }
 }
+
+
 
 
 

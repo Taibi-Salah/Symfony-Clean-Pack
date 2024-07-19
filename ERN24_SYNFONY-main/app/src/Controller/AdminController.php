@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Stock;
 use App\Entity\Ticket;
+use App\Form\AddStockType;
 use App\Entity\Intervention;
 use App\Repository\UserRepository;
 use App\Repository\TicketRepository;
@@ -13,6 +14,7 @@ use App\Repository\InterventionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AdminController extends AbstractController
@@ -42,8 +44,13 @@ class AdminController extends AbstractController
 
     #[Route('/admin/catalogue', name: 'admin_catalogue')]
     public function catalogue(): Response
-    {
-        return $this->render('admin/catalogue.html.twig');
+    { //ici on affiche le catalogue des pièces
+        $stock = $this->entityManager->getRepository(Stock::class)->findAll();
+
+        return $this->render('admin/catalogue.html.twig', [
+            'stock' => $stock,
+            
+        ]);
     }
 
     #[Route('/admin/history', name: 'admin_history')]
@@ -53,20 +60,64 @@ class AdminController extends AbstractController
     }
 
     #[Route('/admin/addpiece', name: 'app_addpiece')]
-    public function addpiece(): Response
-    {
+    public function addpiece(Request $request,ValidatorInterface $validator): Response
+    { 
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
+            // Implement stock addition logic here
+            $stock = new Stock();
+            $form = $this->createForm(AddStockType::class, $stock);
+            $form->handleRequest($request);
+            //ici on vas vérifie que les donénessont correctes
+            
+            if ($form->isSubmitted() && $form->isValid()) { // Set the default status
+                $stock->setActive('True');
+                $this->entityManager->persist($stock);
+                $this->entityManager->flush();
+    
+                return $this->redirectToRoute('admin_catalogue');
+            }
+
+    
         return $this->render('admin/form/addpiece.html.twig', [
             'controller_name' => 'HomeController',
+            'form' => $form->createView(),
         ]);
+
+
     }
 
-    #[Route('/admin/editpiece', name: 'app_editpiece')]
-    public function updateticket(): Response
+    /**
+     * méthode qui va supprimer une pièce
+     * @Route("/admin/deletepiece/{id}", name="app_deletepiece")
+     * @param Stock $stock
+     * @return Response
+     */
+    #[Route('/admin/deletepiece/{id}', name: 'app_deletepiece')]
+    public function deletepiece(Stock $stock): Response
+    {
+        $this->entityManager->remove($stock);
+        $this->entityManager->flush();
+
+        $this->addFlash('success', 'Ticket deleted successfully.');
+        return $this->redirectToRoute('admin_catalogue');
+
+    }
+
+
+
+
+
+    #[Route('/admin/editpiece/{id}', name: 'app_editpiece')]
+    public function updateticket($id): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $piece= $this->entityManager->getRepository(Stock::class)->findOneBy(
+            ['id' => $id]
+        );
+    
         return $this->render('admin/form/editpiece.html.twig', [
             'controller_name' => 'HomeController',
+            'piece' => $piece,
         ]);
     }
 
@@ -156,7 +207,16 @@ class AdminController extends AbstractController
             $ticket->setTechnician(null);
             $this->entityManager->persist($ticket);
         }
-    }}
+    }
+
+}
+
+
+
+
+
+
+
 
 
 
