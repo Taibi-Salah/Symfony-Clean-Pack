@@ -95,7 +95,7 @@ class TicketController extends AbstractController
     #[Route('/ticket/close/{id}', name: 'ticket_close')]
     public function close(Ticket $ticket, Request $request): Response
     {
-        $ticket->setStatus('résolus');
+        $ticket->setStatus('resolus');
         $ticket->setDateEnd(new \DateTime());
 
         $finalReport = $request->request->get('finalReport');

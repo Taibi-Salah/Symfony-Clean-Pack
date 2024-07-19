@@ -191,7 +191,7 @@ class UserController extends AbstractController
     #[Route('/ticket/close/{id}', name: 'ticket_close')]
     public function close(Ticket $ticket): Response
     {
-        $ticket->setStatus('closed');
+        $ticket->setStatus('resolus');
         $ticket->setDateEnd(new \DateTime());
 
         $description = $this->generateFinalReport($ticket);

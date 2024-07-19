@@ -5,8 +5,9 @@
 {% block body %}
 <div class="container mt-5">
     <div class="card">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h1>Gestion RH et fournisseurs</h1>
+            <a href="{{ path('app_home') }}" class="btn btn-secondary">Retour</a>
         </div>
         <div class="card-body">
             {% if app.user %}
@@ -36,19 +37,23 @@
                     {% endfor %}
                 </ul>
 
-                <h3>Ajouter un technicien</h3>
-                <form method="post" action="{{ path('app_adduser') }}">
-                    <input type="hidden" name="roles" value="ROLE_TECHNICIEN">
-                    <div class="mb-3">
-                        <label for="tech-email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="tech-email" name="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="tech-password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="tech-password" name="password" required>
-                    </div>
-                    <button type="submit" class="btn btn-success">Ajouter</button>
-                </form>
+                <button class="btn btn-secondary mb-3" type="button" onclick="toggleSection('addTechnicianForm')">
+                    Ajouter un technicien
+                </button>
+                <div id="addTechnicianForm" style="display: none;">
+                    <form method="post" action="{{ path('app_adduser') }}">
+                        <input type="hidden" name="roles" value="ROLE_TECHNICIEN">
+                        <div class="mb-3">
+                            <label for="tech-email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="tech-email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tech-password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="tech-password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Ajouter</button>
+                    </form>
+                </div>
 
                 <h2>Fournisseurs</h2>
                 <ul class="list-group mb-3">
@@ -72,21 +77,23 @@
                     {% endfor %}
                 </ul>
 
-                <h3>Ajouter un fournisseur</h3>
-                <form method="post" action="{{ path('app_adduser') }}">
-                    <input type="hidden" name="roles" value="ROLE_SUPPLIER">
-                    <div class="mb-3">
-                        <label for="supplier-email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="supplier-email" name="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="supplier-password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="supplier-password" name="password" required>
-                    </div>
-                    <button type="submit" class="btn btn-success">Ajouter</button>
-                </form>
-
-                <a href="{{ path('app_home') }}" class="btn btn-secondary mt-3">Retour</a>
+                <button class="btn btn-secondary mb-3" type="button" onclick="toggleSection('addSupplierForm')">
+                    Ajouter un fournisseur
+                </button>
+                <div id="addSupplierForm" style="display: none;">
+                    <form method="post" action="{{ path('app_adduser') }}">
+                        <input type="hidden" name="roles" value="ROLE_SUPPLIER">
+                        <div class="mb-3">
+                            <label for="supplier-email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="supplier-email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="supplier-password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="supplier-password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Ajouter</button>
+                    </form>
+                </div>
             {% else %}
                 <p>You are not logged in.</p>
                 <a href="{{ path('app_login') }}" class="btn btn-primary">Login</a>
@@ -97,48 +104,24 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    {{ encore_entry_script_tags('app') }}
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script>
-        function confirmDelete(userId, userType) {
-            if (confirm(`Êtes-vous sûr de vouloir supprimer ce ${userType} ?`)) {
-                axios.delete(`/api/users/${userId}`).then(function (response) {
-                    if (response.data.success) {
-                        const userRow = document.getElementById(`user-${userId}`);
-                        if (userRow) {
-                            userRow.remove();
-                            showAlert('success', `Le ${userType} a été supprimé avec succès.`);
-                        } else {
-                            showAlert('warning', 'Élément supprimé, mais la page doit être rafraîchie.');
-                        }
-                    } else {
-                        showAlert('error', 'Erreur lors de la suppression : ' + (response.data.message || 'Raison inconnue'));
-                    }
-                }).catch(function (error) {
-                    console.error('Erreur:', error);
-                    showAlert('error', 'Erreur lors de la suppression. Veuillez réessayer.');
-                });
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section.style.display === "none") {
+                section.style.display = "block";
+            } else {
+                section.style.display = "none";
             }
-        }
-
-        function showAlert(type, message) {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type === 'success' ? 'success' : type === 'error' ? 'danger' : 'warning'} alert-dismissible fade show`;
-            alertDiv.role = 'alert';
-            alertDiv.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            `;
-
-            const container = document.querySelector('.container') || document.body;
-            container.insertBefore(alertDiv, container.firstChild);
-
-            // Optionnel : Faire disparaître l'alerte après 5 secondes
-            setTimeout(() => {
-                alertDiv.remove();
-            }, 5000);
         }
     </script>
 {% endblock %}
+
+
+
+
+
 
 
 
