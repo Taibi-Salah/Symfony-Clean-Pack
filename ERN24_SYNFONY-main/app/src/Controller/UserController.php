@@ -66,7 +66,7 @@ class UserController extends AbstractController
             'error' => $error,
         ]);
     }
-     
+
 
 
     #[Route('/inscription', name: 'app_inscription')]
@@ -119,7 +119,7 @@ class UserController extends AbstractController
 
             'status' => 'ouvert'
         ]);
-      
+
         $tickets_progress = $this->entityManager->getRepository(Ticket::class)->findBy([
             'user' => $this->getUser(),
             'status' => 'en cours'
@@ -161,7 +161,7 @@ class UserController extends AbstractController
         ]);
 
         //ici on va chercher les stocks et afficher un messahge d'erreur si le stock est insuffisant
-         $stocks = $this->entityManager->getRepository(Stock::class)->findAll();
+        $stocks = $this->entityManager->getRepository(Stock::class)->findAll();
 
         return $this->render('user/technicien.html.twig', [
             'tickets' => $tickets,
@@ -191,7 +191,6 @@ class UserController extends AbstractController
     #[Route('/ticket/close/{id}', name: 'ticket_close')]
     public function close(Ticket $ticket): Response
     {
-        // Update ticket status and end date
         $ticket->setStatus('resolus');
         $ticket->setDateEnd(new \DateTime());
 
@@ -262,31 +261,3 @@ class UserController extends AbstractController
         return $this->redirectToRoute('admin_dashboard'); // Adjust the route name accordingly
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
