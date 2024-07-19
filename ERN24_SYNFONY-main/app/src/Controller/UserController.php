@@ -236,6 +236,25 @@ class UserController extends AbstractController
             $stockDetails
         );
     }
+
+    #[Route('/adduser', name: 'app_adduser', methods: ['POST'])]
+    public function addUser(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher)
+    {
+        $email = $request->request->get('email');
+        $password = $request->request->get('password');
+        $roles = [$request->request->get('roles')];
+
+        $user = new User();
+        $user->setEmail($email);
+        $user->setRoles($roles);
+        $user->setPassword($passwordHasher->hashPassword($user, $password));
+        $user->setActive(true);
+
+        $em->persist($user);
+        $em->flush();
+
+        return $this->redirectToRoute('admin_dashboard'); // Adjust the route name accordingly
+    }
 }
 
 

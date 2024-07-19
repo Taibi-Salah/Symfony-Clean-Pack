@@ -168,6 +168,57 @@ class AdminController extends AbstractController
 
         return $this->redirectToRoute('app_dashboardl');
     }
+
+    #[Route('/admin/deleteUser/{id}', name: 'app_deleteuser')]
+    public function deleteUser(User $user): Response
+    {
+        try {
+            $this->entityManager->beginTransaction();
+ 
+            if (in_array('ROLE_SUPPLIER', $user->getRoles())) {
+                $this->handleSupplierDeletion($user);
+            } elseif (in_array('ROLE_TECHNICIAN', $user->getRoles())) {
+                $this->handleTechnicianDeletion($user);
+            }
+ 
+            // Supprimer les informations de contact
+            $contactInfo = $user->getContactInformation();
+            if ($contactInfo) {
+                $this->entityManager->remove($contactInfo);
+            }
+ 
+            // Supprimer l'utilisateur
+            $this->entityManager->remove($user);
+            $this->entityManager->flush();
+ 
+            $this->entityManager->commit();
+ 
+            $this->addFlash('success', 'Utilisateur et ses informations de contact supprimés avec succès.');
+        } catch (\Exception $e) {
+            $this->entityManager->rollback();
+            $this->addFlash('error', 'Erreur lors de la suppression : ' . $e->getMessage());
+        }
+ 
+        return $this->redirectToRoute('app_dashboard' );
+    }
+ 
+    private function handleSupplierDeletion(User $supplier)
+    {
+        $stocks = $this->entityManager->getRepository(Stock::class)->findBy(['supplier' => $supplier]);
+        foreach ($stocks as $stock) {
+            $stock->setSupplier(null);
+            $this->entityManager->persist($stock);
+        }
+    }
+ 
+    private function handleTechnicianDeletion(User $technician)
+    {
+        $tickets = $this->entityManager->getRepository(Ticket::class)->findBy(['technician' => $technician]);
+        foreach ($tickets as $ticket) {
+            $ticket->setTechnician(null);
+            $this->entityManager->persist($ticket);
+        }
+    }
 }
 
 

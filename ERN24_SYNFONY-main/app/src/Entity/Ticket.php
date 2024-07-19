@@ -1,5 +1,7 @@
 <?php
 
+// src/Entity/Ticket.php
+
 namespace App\Entity;
 
 use App\Repository\TicketRepository;
@@ -21,10 +23,11 @@ class Ticket
     private ?\DateTimeInterface $dateEnd = null;
 
     #[ORM\ManyToOne(inversedBy: 'tickets')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\ManyToOne(inversedBy: 'tickets')]
-    private ?User $technicien = null;
+    #[ORM\ManyToOne(inversedBy: 'assignedTickets')]
+    private ?User $technicien = null; // Allow NULL values here
 
     #[ORM\OneToOne(inversedBy: 'ticket', cascade: ['persist', 'remove'])]
     private ?Intervention $intervention = null;
@@ -124,8 +127,4 @@ class Ticket
         return $this;
     }
 }
-
-
-
-
 

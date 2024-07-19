@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Entity;
+// src/Entity/User.php
 
+namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
@@ -42,6 +43,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $tickets;
 
     /**
+     * @var Collection<int, Ticket>
+     */
+    #[ORM\OneToMany(mappedBy: 'technicien', targetEntity: Ticket::class)]
+    private Collection $assignedTickets;
+
+    /**
      * @var Collection<int, Stock>
      */
     #[ORM\OneToMany(mappedBy: 'supplier', targetEntity: Stock::class)]
@@ -50,6 +57,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
+        $this->assignedTickets = new ArrayCollection();
         $this->stocks = new ArrayCollection();
     }
 
@@ -153,6 +161,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @return Collection<int, Ticket>
+     */
+    public function getAssignedTickets(): Collection
+    {
+        return $this->assignedTickets;
+    }
+
+    public function addAssignedTicket(Ticket $ticket): self
+    {
+        if (!$this->assignedTickets->contains($ticket)) {
+            $this->assignedTickets->add($ticket);
+            $ticket->setTechnicien($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssignedTicket(Ticket $ticket): self
+    {
+        if ($this->assignedTickets->removeElement($ticket)) {
+            // set the owning side to null (unless already changed)
+            if ($ticket->getTechnicien() === $this) {
+                $ticket->setTechnicien(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Collection<int, Stock>
      */
     public function getStocks(): Collection
@@ -198,3 +236,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 }
+
