@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Stock;
 use App\Entity\Ticket;
 use App\Form\AddStockType;
+use App\Form\EditPieceType;
 use App\Entity\Intervention;
 use App\Repository\UserRepository;
 use App\Repository\TicketRepository;
@@ -67,12 +68,14 @@ class AdminController extends AbstractController
             $stock = new Stock();
             $form = $this->createForm(AddStockType::class, $stock);
             $form->handleRequest($request);
+
             //ici on vas vérifie que les donénessont correctes
             
             if ($form->isSubmitted() && $form->isValid()) { // Set the default status
                 $stock->setActive('True');
                 $this->entityManager->persist($stock);
                 $this->entityManager->flush();
+                
     
                 return $this->redirectToRoute('admin_catalogue');
             }
@@ -108,16 +111,31 @@ class AdminController extends AbstractController
 
 
     #[Route('/admin/editpiece/{id}', name: 'app_editpiece')]
-    public function updateticket($id): Response
+    public function updateticket($id,Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $piece= $this->entityManager->getRepository(Stock::class)->findOneBy(
             ['id' => $id]
         );
+        
+
+        $form = $this->createForm(EditPieceType::class, $piece);
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) { // Set the default status
+            $piece->setActive('True');
+            
+            $this->entityManager->persist($piece);
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('admin_catalogue');
+        }
+
     
         return $this->render('admin/form/editpiece.html.twig', [
             'controller_name' => 'HomeController',
             'piece' => $piece,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -150,47 +168,42 @@ class AdminController extends AbstractController
             }
         }
 
-        return $this->redirectToRoute('app_dashboardl');
+        return $this->redirectToRoute('app_dashboard');
     }
 
- /**
-     * Méthode pour supprimer un utilisateur (fournisseur ou technicien)
-     * 
-     * @Route("/admin/deleteUser/{id}", name="app_deleteuser")
-     */
     #[Route('/admin/deleteUser/{id}', name: 'app_deleteuser')]
     public function deleteUser(User $user): Response
     {
         try {
             $this->entityManager->beginTransaction();
-
+ 
             if (in_array('ROLE_SUPPLIER', $user->getRoles())) {
                 $this->handleSupplierDeletion($user);
             } elseif (in_array('ROLE_TECHNICIAN', $user->getRoles())) {
                 $this->handleTechnicianDeletion($user);
             }
-
+ 
             // Supprimer les informations de contact
             $contactInfo = $user->getContactInformation();
             if ($contactInfo) {
                 $this->entityManager->remove($contactInfo);
             }
-
+ 
             // Supprimer l'utilisateur
             $this->entityManager->remove($user);
             $this->entityManager->flush();
-
+ 
             $this->entityManager->commit();
-
+ 
             $this->addFlash('success', 'Utilisateur et ses informations de contact supprimés avec succès.');
         } catch (\Exception $e) {
             $this->entityManager->rollback();
             $this->addFlash('error', 'Erreur lors de la suppression : ' . $e->getMessage());
         }
-
-        return $this->redirectToRoute('app_dashboard' );
+ 
+        return $this->redirectToRoute('admin_dashboard');
     }
-
+ 
     private function handleSupplierDeletion(User $supplier)
     {
         $stocks = $this->entityManager->getRepository(Stock::class)->findBy(['supplier' => $supplier]);
@@ -198,8 +211,10 @@ class AdminController extends AbstractController
             $stock->setSupplier(null);
             $this->entityManager->persist($stock);
         }
+        // Si la relation est bidirectionnelle, ajoutez ceci :
+    $supplier->getStocks()->clear();
     }
-
+ 
     private function handleTechnicianDeletion(User $technician)
     {
         $tickets = $this->entityManager->getRepository(Ticket::class)->findBy(['technician' => $technician]);
@@ -207,8 +222,8 @@ class AdminController extends AbstractController
             $ticket->setTechnician(null);
             $this->entityManager->persist($ticket);
         }
-    }
 
+    }
 }
 
 

@@ -19,7 +19,7 @@ class DashboardController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/dashboard', name: 'app_dashboardl')]
+    #[Route('/dashboard', name: 'app_dashboard')]
     public function index(): Response
     {
         // Fetch data from the database

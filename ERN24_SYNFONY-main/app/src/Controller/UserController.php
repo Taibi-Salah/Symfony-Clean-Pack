@@ -122,8 +122,8 @@ class UserController extends AbstractController
 
             'status' => 'ouvert'
         ]);
-
-        $tickets = $this->entityManager->getRepository(Ticket::class)->findBy([
+      
+        $tickets_progress = $this->entityManager->getRepository(Ticket::class)->findBy([
             'user' => $this->getUser(),
             'status' => 'en cours'
 
@@ -135,6 +135,7 @@ class UserController extends AbstractController
 
         return $this->render('user/ticket.html.twig', [
             'tickets' => $tickets,
+            'tickets_progress' => $tickets_progress,
             'closed_tickets' => $closedTickets,
             'form' => $form->createView(),
         ]);
@@ -153,14 +154,23 @@ class UserController extends AbstractController
             'technicien' => $technicien,
             'status' => 'ouvert'
         ]);
+        $tickets_progress = $this->entityManager->getRepository(Ticket::class)->findBy([
+            'technicien' => $technicien,
+            'status' => 'en cours'
+        ]);
         $closedTickets = $this->entityManager->getRepository(Ticket::class)->findBy([
             'technicien' => $technicien,
             'status' => 'resolus'
         ]);
 
+        //ici on va chercher les stocks et afficher un messahge d'erreur si le stock est insuffisant
+         $stocks = $this->entityManager->getRepository(Stock::class)->findAll();
+
         return $this->render('user/technicien.html.twig', [
             'tickets' => $tickets,
+            'tickets_progress' => $tickets_progress,
             'closed_tickets' => $closedTickets,
+            'stocks' => $stocks,
         ]);
     }
 
@@ -228,6 +238,25 @@ class UserController extends AbstractController
             $closingDate,
             $stockDetails
         );
+    }
+
+    #[Route('/adduser', name: 'app_adduser', methods: ['POST'])]
+    public function addUser(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher)
+    {
+        $email = $request->request->get('email');
+        $password = $request->request->get('password');
+        $roles = [$request->request->get('roles')];
+
+        $user = new User();
+        $user->setEmail($email);
+        $user->setRoles($roles);
+        $user->setPassword($passwordHasher->hashPassword($user, $password));
+        $user->setActive(true);
+
+        $em->persist($user);
+        $em->flush();
+
+        return $this->redirectToRoute('admin_dashboard'); // Adjust the route name accordingly
     }
 }
 

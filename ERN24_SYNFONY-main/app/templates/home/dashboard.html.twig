@@ -109,6 +109,7 @@
 								</thead>
 								<tbody>
 									{% for ticket in tickets %}
+									
 										<tr>
 											<td>{{ ticket.id }}</td>
 											<td>
@@ -150,7 +151,8 @@
 													: 'Non assigné' }}
 											</td>
 											<td>
-												<button class="btn btn-sm btn-danger" onclick="deleteTicket({{ ticket.id }})">supprimer</button>
+											
+												<a href="{{ path('ticket_delete', {id: ticket.id}) }}" class="btn btn-sm btn-danger">supprimer</a>
 											</td>
 										</tr>
 									{% endfor %}
@@ -232,7 +234,7 @@
 													</option>
 												{% endfor %}
 											</select>
-											<button type="submit" class="btn btn-sm btn-primary mt-2">Assigner</button>
+										<button type="submit" class="btn btn-sm btn-primary mt-2">Assigner</button>
 										</form>
 									</td>
 								</tr>
