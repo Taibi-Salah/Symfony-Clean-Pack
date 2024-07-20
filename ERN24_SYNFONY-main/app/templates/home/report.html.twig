@@ -24,8 +24,8 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Description</th>
                                 <th>Technicien</th>
-                                <th>Client</th>
                                 <th>Date</th>
                                 <th>Statut</th>
                                 <th>Actions</th>
@@ -39,13 +39,30 @@
                                     <td></td>
 =======
                                     <th scope="row">{{ ticket.id }}</td>
+<<<<<<< HEAD
                                     <td>John Doe</td>
 >>>>>>> main
                                     <td>Entreprise ABC</td>
                                     <td>{{ "now"|date("d/m/Y") }}</td>
+=======
+                                    <td>{{ ticket.description }}</td>
+                                    <td>
+                                    {% if ticket.technicien %}
+											{% if ticket.technicien.contactInformation %}
+												{{ ticket.technicien.contactInformation.lastName|default('') }}
+												{{ ticket.technicien.contactInformation.firstName|default('') }}
+											{% else %}
+												{{ ticket.technicien.email }}
+											{% endif %}
+                                        {% else %}
+                                            <td>N/A</td>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ ticket.dateEnd|date('d/m/Y H:i') }}</td>
+>>>>>>> origin/main
                                     <td><span class="badge bg-success">{{ ticket.status }}</span></td>
                                     <td>
-                                        <a href="#" class="btn btn-sm btn-primary">Voir</a>
+                                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#useFactModal{{ ticket.id }}">Voir</button>
                                     </td>
                                 </tr>
                                 {% else %}
@@ -68,8 +85,52 @@
                 <a href="{{ path('app_home') }}" class="btn btn-secondary mt-3">Retour</a>
             </div>
         </div>
+
+        <!-- Modal for using stock -->
+        {% for ticket in tickets %}
+            <div class="modal fade" id="useFactModal{{ ticket.id }}" tabindex="-1" role="dialog" aria-labelledby="useStockModalLabel{{ ticket.id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="useStockModalLabel{{ ticket.id }}">Détail du ticket numéro : {{ ticket.id }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    
+                            <div class="modal-body">
+                            
+                                <p><strong>Statut:</strong> {{ ticket.status }}</p>
+                                <p><strong>Date de fin :</strong> {{ ticket.dateEnd|date('d/m/Y H:i') }}</p>
+                                <p><strong>Description:</strong> {{ ticket.description }}</p>
+                                <p><strong>Client:</strong> 
+                            
+                            {% if ticket.user %}
+                                {% if ticket.user.contactInformation %}
+                                    {{ ticket.user.contactInformation.lastName|default('') }}
+                                    {{ ticket.user.contactInformation.firstName|default('') }}
+                                {% else %}
+                                    {{ ticket.user.email }}
+                                {% endif %}
+                            {% else %}
+                                <p>N/A</p>
+                            {% endif %}</p>
+                        {# <p><strong>Stock utilisé :</strong> {{ ticket.intervention.interventionStocks.stock.label}}</p> #}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                            </div>
+                
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
     </main>
 </div>
+
+
+
 {% endblock %}
 
 {% block javascripts %}

@@ -95,38 +95,33 @@ class TicketController extends AbstractController
     #[Route('/ticket/close/{id}', name: 'ticket_close')]
     public function close(Ticket $ticket, Request $request): Response
     {
-        $ticket->setStatus('résolus');
+        // Update ticket status and end date
+        $ticket->setStatus('resolus');
         $ticket->setDateEnd(new \DateTime());
 
+        // Get the final report from the request
         $finalReport = $request->request->get('finalReport');
         $interventionStocks = $ticket->getIntervention()->getInterventionStocks();
 
-        $facturation = new Facturation();
-        $facturationData = [
-            'ticket_id' => $ticket->getId(),
-            'technician_id' => $ticket->getTechnicien()->getId(),
-            'creation_date' => $ticket->getDateStart()->format('d/m/Y H:i'),
-            'closing_date' => $ticket->getDateEnd()->format('d/m/Y H:i'),
-            'stocks_used' => []
-        ];
-
+        // Iterate over the intervention stocks to update the necessary details
         foreach ($interventionStocks as $interventionStock) {
-            $facturationData['stocks_used'][] = [
-                'stock_label' => $interventionStock->getStock()->getLabel(),
-                'quantity_used' => $interventionStock->getQuantityUsed(),
-                'description' => $interventionStock->getDescription(),
-                'used_at' => $interventionStock->getUsedAt()->format('d/m/Y H:i')
-            ];
+            // Assuming you want to update some fields in intervention stock
+            // Update the description with the final report or any other required field
+            $interventionStock->setDescription($finalReport);
+            // Update the used_at field to the current datetime or any other logic you want
+            $interventionStock->setUsedAt(new \DateTime());
+
+            // Persist the updated intervention stock
+            $this->entityManager->persist($interventionStock);
         }
 
-        $facturation->setValue(json_encode($facturationData));
-        $facturation->setDescription($finalReport);
-
-        $this->entityManager->persist($facturation);
+        // Flush the entity manager to save changes
         $this->entityManager->flush();
 
+        // Add a success flash message
         $this->addFlash('success', 'Ticket closed successfully.');
 
+        // Redirect to the ticket list or another appropriate page
         return $this->redirectToRoute('app_ticket');
     }
 
@@ -137,17 +132,10 @@ class TicketController extends AbstractController
         $this->entityManager->flush();
 
         $this->addFlash('success', 'Ticket deleted successfully.');
+<<<<<<< HEAD
         return $this->redirectToRoute('app_dashboard');
+=======
+        return $this->redirectToRoute('app_dashboardl');
+>>>>>>> origin/main
     }
 }
-
-
-
-
-
-
-
-
-
-
-

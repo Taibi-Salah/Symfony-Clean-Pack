@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+<<<<<<< HEAD
 use App\Entity\User;
 use App\Entity\Ticket;
 use App\Entity\Stock;
@@ -136,3 +137,18 @@ class AppFixtures extends Fixture
 
 
 
+=======
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
+
+class AppFixtures extends Fixture
+{
+    public function load(ObjectManager $manager): void
+    {
+        // $product = new Product();
+        // $manager->persist($product);
+
+        $manager->flush();
+    }
+}
+>>>>>>> origin/main
