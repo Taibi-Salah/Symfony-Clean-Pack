@@ -14,6 +14,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class StockController extends AbstractController
 {
+    /**
+ * @ORM\ManyToOne(targetEntity=User::class)
+ * @ORM\JoinColumn(name="supplier_id", referencedColumnName="id", nullable=true)
+ */
+private $supplier;
+
     private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -47,5 +53,11 @@ class StockController extends AbstractController
 
         return $this->redirectToRoute('stock_list');
     }
+
+    public function setSupplier(?User $supplier): self
+{
+    $this->supplier = $supplier;
+    return $this;
+}
 }
 

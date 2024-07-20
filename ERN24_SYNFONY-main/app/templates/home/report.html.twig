@@ -2,6 +2,10 @@
 
 {% block title %}Rapports des Techniciens{% endblock %}
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> main
 {% block body %}
 <div class=" min-vh-10">
 		{{ include('home/partials/header.html.twig') }}
@@ -30,7 +34,17 @@
                         <tbody>
                             {% for ticket in tickets %}
                                 <tr>
+<<<<<<< HEAD
+                                    <td>#{{ i }}</td>
+                                    <td></td>
+=======
                                     <th scope="row">{{ ticket.id }}</td>
+<<<<<<< HEAD
+                                    <td>John Doe</td>
+>>>>>>> main
+                                    <td>Entreprise ABC</td>
+                                    <td>{{ "now"|date("d/m/Y") }}</td>
+=======
                                     <td>{{ ticket.description }}</td>
                                     <td>
                                     {% if ticket.technicien %}
@@ -45,6 +59,7 @@
                                         {% endif %}
                                     </td>
                                     <td>{{ ticket.dateEnd|date('d/m/Y H:i') }}</td>
+>>>>>>> origin/main
                                     <td><span class="badge bg-success">{{ ticket.status }}</span></td>
                                     <td>
                                         <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#useFactModal{{ ticket.id }}">Voir</button>

@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Stock;
+use App\Entity\Ticket;
 use App\Form\AddStockType;
 use App\Form\EditPieceType;
 use App\Entity\Intervention;
@@ -166,7 +168,7 @@ class AdminController extends AbstractController
             }
         }
 
-        return $this->redirectToRoute('app_dashboardl');
+        return $this->redirectToRoute('app_dashboard');
     }
 
     #[Route('/admin/deleteUser/{id}', name: 'app_deleteuser')]
@@ -199,7 +201,7 @@ class AdminController extends AbstractController
             $this->addFlash('error', 'Erreur lors de la suppression : ' . $e->getMessage());
         }
  
-        return $this->redirectToRoute('app_dashboard' );
+        return $this->redirectToRoute('admin_dashboard');
     }
  
     private function handleSupplierDeletion(User $supplier)
@@ -209,6 +211,8 @@ class AdminController extends AbstractController
             $stock->setSupplier(null);
             $this->entityManager->persist($stock);
         }
+        // Si la relation est bidirectionnelle, ajoutez ceci :
+    $supplier->getStocks()->clear();
     }
  
     private function handleTechnicianDeletion(User $technician)
@@ -218,6 +222,7 @@ class AdminController extends AbstractController
             $ticket->setTechnician(null);
             $this->entityManager->persist($ticket);
         }
+
     }
 }
 
